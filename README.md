@@ -6,11 +6,12 @@
 [![Youtube](https://img.shields.io/badge/YouTube-Demo-red)](https://youtu.be/4O9aIftvoqM)
 
 
-[//]: # ([![Downloads]&#40;https://img.shields.io/pypi/dm/zephir&#41;]&#40;https://pepy.tech/project/zephir&#41;)
+[//]: # ([![Downloads]&#40;https://pepy.tech/badge/zephir&#41;]&#40;https://pepy.tech/project/zephir&#41;)
+
+[//]: # ()
+[//]: # ([Read our preprint!]&#40;&#41;)
 
 ZephIR is a multiple object tracking algorithm based on image registration and built on PyTorch. 
-
-[//]: # ([Read our preprint!]&#40;&#41;)
 
 ZephIR tracks keypoints in a 2D or 3D movie by registering image descriptors sampled around each keypoint.
 Image registration loss is combined with three additional regularization terms:
@@ -20,7 +21,8 @@ Image registration loss is combined with three additional regularization terms:
 
 Overview of tracking loss:
 
-![loss](https://user-images.githubusercontent.com/39420322/179288565-0485c08b-0b4f-4b15-89d4-22821d44d66c.png)
+![loss](https://user-images.githubusercontent.com/39420322/179583408-79b86ebc-7d44-4fd0-ab80-a53eee300c16.png)
+
 
 ZephIR is fast, efficient, and designed to run on laptops instead of powerful desktop workstations. 
 It requires no prior training of any model weights, and it is capable of generalizing to a wide diversity of datasets with small tweaks to parameters. 
@@ -34,7 +36,7 @@ We provide some support for exporting ZephIR results to [DeepLabCut](https://git
 ### Quick start
 
 ```bash
-pip install zephir
+pip install docopt pandas==1.4.2 zephir
 ```
 
 ### Dependencies

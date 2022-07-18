@@ -1,0 +1,3 @@
+recursive-include zephir/annotator/client_build *
+recursive-include zephir/annotator/rpc *
+recursive-include zephir/annotator/data *

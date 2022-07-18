@@ -40,6 +40,8 @@ setup(
         'recommend_frames=zephir.methods.recommend_frames:main',
         'zephod=zephir.zephod.main:main'
     ]},
+    include_package_data=True,
+    zip_safe=False,
     # keywords=[
     #     'image registration',
     #     'neuron tracking',

@@ -153,34 +153,34 @@ def get_gvol(t: int, idx: int) -> bytes:
 
 @app.route('/', methods=['GET'])
 def serve_dir_directory_index():
-    return send_from_directory("client/build", "index.html")
+    return send_from_directory("client_build", "index.html")
 
 
 @app.route('/favicon.ico', methods=['GET'])
 def serve_favicon():
-    return send_from_directory("client/build", "favicon.ico")
+    return send_from_directory("client_build", "favicon.ico")
 
 
 @app.route('/manifest.json', methods=['GET'])
 def serve_manifest():
-    return send_from_directory("client/build", "manifest.json")
+    return send_from_directory("client_build", "manifest.json")
 
 
 @app.route('/static/js/<path:path>', methods=['GET'])
 def serve_static_js(path):
-    return send_from_directory(os.path.join("client/build", "static", "js"),
+    return send_from_directory(os.path.join("client_build", "static", "js"),
                                path)
 
 
 @app.route('/static/css/<path:path>', methods=['GET'])
 def serve_static_css(path):
-    return send_from_directory(os.path.join("client/build", "static", "css"),
+    return send_from_directory(os.path.join("client_build", "static", "css"),
                                path)
 
 
 @app.route('/webgl_colormaps/<path:path>', methods=['GET'])
 def serve_colormaps(path):
-    return send_from_directory(os.path.join("client/build", "webgl_colormaps"),
+    return send_from_directory(os.path.join("client_build", "webgl_colormaps"),
                                path)
 
 

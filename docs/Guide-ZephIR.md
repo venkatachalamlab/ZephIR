@@ -2,6 +2,8 @@
 
 ZephIR can be used for a variety of applications and in a variety of ways. Use the example workflows as guidelines to create an ideal workflow for a particular application.
 
+You can also watch our [video tutorial](https://youtu.be/4O9aIftvoqM) going over the workflow with an example dataset.
+
 ## General
 
 A general workflow for using ZephIR to track keypoints in a new video.
