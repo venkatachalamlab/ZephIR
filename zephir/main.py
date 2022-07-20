@@ -45,6 +45,7 @@ Options:
     --sort_mode=<sort_mode>             method for sorting frame order and parent-child tree. [default: similarity]
     --t_ignore=<t_ignore>               frames to ignore for analysis.
     --t_ref=<t_ref>                     override for reference frames to search for annotations.
+    --t_track=<t_track>                 frames to include for analysis; supercedes t_ignore.
     --wlid_ref=<wlid_ref>               subset of keypoints to track by worldline_id; supercedes n_ref.
     --z_compensator=<z_compensator>     number of additional gradient descent steps for z-axis. [default: -1.0]
 """
@@ -158,6 +159,7 @@ def run_zephir(dataset: Path, args: dict):
             container=container,
             sort_mode=str(args['--sort_mode']),
             t_ignore=eval(args['--t_ignore']) if args['--t_ignore'] else None,
+            t_track=eval(args['--t_track']) if args['--t_track'] else None,
         )
 
         update_checkpoint(dataset, {'state': 'track', '_t_list': None})

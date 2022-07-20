@@ -53,10 +53,14 @@
     - 'depth' uses shortest-path grid search, then sorts frames based on depth in the resulting parent-child tree. This can scale up to *O(n<sup>4</sup>)* in computation with number of frames.
     - *default: 'similarity'*
 - `t_ignore`: Ignore these frames during registration. Leave out to analyze all frames.
-    > *TIP*: If excluding a large range of frames, you can use `list(range(start, end))` instead of listing every frame. Note that ZephIR uses Python's `eval` function to interpret your input, so any other string expressions compatible with `eval` will work here as well.
+    > *TIP*: If excluding a large range of frames, you can use `"list(range(start, end))"` instead of listing every frame. Note that ZephIR uses Python's `eval` function to interpret your input, so any other string expressions compatible with `eval` will work here as well.
 - `t_ref`: Only search these frames for available annotations. Leave out if you want to process all annotations.
+- `t_track`: Track only these frames during registration. Leave out to analyze all frames.
+    > *WARNING*: This will supercede `t_ignore`.
+
+    > *TIP*: If specifying a large range of frames, you can use `"list(range(start, end))"` instead of listing every frame. Note that ZephIR uses Python's `eval` function to interpret your input, so any other string expressions compatible with `eval` will work here as well.
 - `wlid_ref`: Identify specific keypoints to track by *worldline_id* (note: *worldline_id* and *track ID* are used synonymously). Pulls all available annotations for these worldlines. Leave out to track all available keypoints.
-    > *WARNING*: This will supercede n_ref.
+    > *WARNING*: This will supercede `n_ref`.
 
     > *TIP*: If specifying a large range of worldlines, you can use `list(range(start, end))` instead of listing every worldline. Note that ZephIR uses Python's `eval` function to interpret your input, so any other string expressions compatible with `eval` will work here as well.
 - `z_compensator`: Multiply gradients in the z-axis by (1 + `z_compensator`). Since the internal coordinate system is rescaled from -1 to 1 in all directions, gradients in the z-axis may be too small when there is a large disparity between the xy- and z-shapes of the dataset, and thus fail to track motion in the z-axis. Increasing this will compensate for the disparity. Note that gradients will still be clipped to (`clip_grad` * `z_compensator`) if `clip_grad` is enabled. Set to 0 or -1 to disable. *default: -1*

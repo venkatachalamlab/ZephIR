@@ -23,6 +23,8 @@ def save_movie(
     include_all = container.get('include_all')
     img_shape = container.get('img_shape')
     shape_t = container.get('shape_t')
+    t_annot = container.get('t_annot')
+    t_list = container.get('t_list')
     worldline_id = container.get('worldline_id')
 
     annotation = get_annotation_df(dataset)
@@ -36,7 +38,13 @@ def save_movie(
              img_shape[1] + 2 * img_shape[0]),
             True
     )
-    for t in tqdm(range(shape_t), desc='Saving to video', unit='frames'):
+
+    if include_all:
+        t_list = np.arange(shape_t)
+    else:
+        t_list = np.unique(list(t_annot) + list(t_list))
+
+    for t in tqdm(t_list, desc='Saving to video', unit='frames'):
         data = get_data(dataset, t, g=gamma, c=channel)
         xyz_result = results[t, ...]
         if include_all and t in np.unique(annotation['t_idx']):

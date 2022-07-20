@@ -8,6 +8,7 @@ def build_tree(
     container,
     sort_mode,
     t_ignore,
+    t_track,
     verbose=False):
     """Build frame tree.
 
@@ -22,6 +23,7 @@ def build_tree(
     shape_t, t_annot
     :param sort_mode: method for building frame branches
     :param t_ignore: frames to ignore for analysis
+    :param t_track: frames to track for analysis; supercedes t_ignore
     :param verbose: plot relevant scores for frame tree
     :return: container (updated entries for: t_list, p_list, r_list, s_list)
     """
@@ -31,6 +33,12 @@ def build_tree(
     channel = container.get('channel')
     shape_t = container.get('shape_t')
     t_annot = container.get('t_annot')
+
+    if t_track is not None:
+        t_ignore = np.setdiff1d(
+            np.arange(shape_t),
+            np.unique(list(t_annot.copy()) + list(t_track))
+        )
 
     print('\nBuilding frame correlation graph...')
     d_full = get_all_pdists(dataset, shape_t, channel, pbar=True)

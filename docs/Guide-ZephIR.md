@@ -20,7 +20,7 @@ A general workflow for using ZephIR to track keypoints in a new video.
   > If you already have annotations created with another software, prepare your annotations and edit /utils/getters.py to make sure ZephIR can load your annotations properly.
 
 6. Run: `zephir --dataset=. [--options]` to track your keypoints. See [this guide](https://github.com/venkatachalamlab/ZephIR/blob/main/docs/Guide-parameters.md) for details on all CLI options and [this doc](https://github.com/venkatachalamlab/ZephIR/blob/main/docs/examples.md) for examples on how the parameters might affect your results.
-  > *TIP*: If your dataset is particularly challenging and long, you can first test and optimize your parameter choices on a small subset of frames. You can either do this by editing `shape_t` your metadata to limit the scope, or using the CLI option `t_ignore` to exclude ranges of frames.
+  > *TIP*: If your dataset is particularly challenging and long, you can first test and optimize your parameter choices on a small subset of frames. You can either do this by editing `shape_t` your metadata to limit the scope, using the CLI option `t_track` to specify a short list of frames, or using the CLI option `t_ignore` to exclude ranges of frames.
 
 7. Check your results with annotated.mp4, which is a movie of the tracked data overlayed with the tracking results. 
 
@@ -90,7 +90,7 @@ A workflow for using ZephIR to augment training data for DeepLabCut.
 6. Rename worldlines by editing boxes under the "Tracks" panel. Each track number can be associated with a name, saved under `worldlines.h5`. We recommend linking worldlines with bodypart names here.
 
 7. Run: `zephir --dataset=. [--options]` to track your keypoints. See [this guide](https://github.com/venkatachalamlab/ZephIR/blob/main/docs/Guide-parameters.md) for details on all CLI options and [this doc](https://github.com/venkatachalamlab/ZephIR/blob/main/docs/examples.md) for examples on how the parameters might affect your results.
-  > *TIP*: If your dataset is particularly challenging and long, you can first test and optimize your parameter choices on a small subset of frames. You can either do this by editing `shape_t` your metadata to limit the scope, or using the CLI option `t_ignore` to exclude ranges of frames.
+  > *TIP*: If your dataset is particularly challenging and long, you can first test and optimize your parameter choices on a small subset of frames. You can either do this by editing `shape_t` your metadata to limit the scope, using the CLI option `t_track` to specify a short list of frames, or using the CLI option `t_ignore` to exclude ranges of frames.
 
 8. Check your results with annotated.mp4 (or with the annotator GUI), which is a movie of the tracked data overlayed with the tracking results. Note the frames with good tracking results that you would like to use for training DeepLabCut.
 
