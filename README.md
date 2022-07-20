@@ -1,17 +1,14 @@
 ![logo](https://user-images.githubusercontent.com/39420322/179288567-257d5aa4-c19f-42b3-be58-cd77bd18d561.png)
 
+![release](https://img.shields.io/github/v/release/venkatachalamlab/zephir)
 [![PyPI](https://img.shields.io/pypi/v/zephir)](https://pypi.org/project/zephir/)
+[![Downloads](https://pepy.tech/badge/zephir)](https://pepy.tech/project/zephir)
 [![GitHub](https://img.shields.io/github/license/venkatachalamlab/ZephIR)](https://github.com/venkatachalamlab/ZephIR/blob/master/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/venkatachalamlab/ZephIR.svg?style=social&label=Star)](https://github.com/venkatachalamlab/ZephIR)
 [![Youtube](https://img.shields.io/badge/YouTube-Demo-red)](https://youtu.be/4O9aIftvoqM)
 
 
-[//]: # ([![Downloads]&#40;https://pepy.tech/badge/zephir&#41;]&#40;https://pepy.tech/project/zephir&#41;)
-
-[//]: # ()
-[//]: # ([Read our preprint!]&#40;&#41;)
-
-ZephIR is a multiple object tracking algorithm based on image registration and built on PyTorch. 
+ZephIR is a multiple object tracking algorithm based on image registration and built on PyTorch. Check out our [preprint](https://www.biorxiv.org/content/10.1101/2022.07.18.500485v1) and [tutorial video](https://youtu.be/4O9aIftvoqM)!
 
 ZephIR tracks keypoints in a 2D or 3D movie by registering image descriptors sampled around each keypoint.
 Image registration loss is combined with three additional regularization terms:
@@ -68,11 +65,11 @@ Make sure that **Python (>=3.8.1)** and the following packages are installed (pr
 
 2. Navigate to the cloned directory on your local machine.
 
-3. Checkout the current version:
+3. Checkout the current release:
 ```bash
 git checkout v1.0.0
 ```
-Use the following command to see what's new in the most recent tagged version:
+Use the following command to see what's new in the most recent release:
 ```bash
 git show v1.0.0
 ```
