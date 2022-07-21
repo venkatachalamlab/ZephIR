@@ -10,6 +10,14 @@
 
 ZephIR is a multiple object tracking algorithm based on image registration and built on PyTorch. Check out our [preprint](https://www.biorxiv.org/content/10.1101/2022.07.18.500485v1) and [tutorial video](https://youtu.be/4O9aIftvoqM)!
 
+### Latest Updates in v1.0.1
+
+* new option `t_track` specifies a list of frames to analyze; supercedes existing option `t_ignore`
+* `save_movie` now only saves reference frames and tracked frames; use `include_all=True` to save all available frames (previous behavior)
+* see [release notes](https://github.com/venkatachalamlab/ZephIR/releases) for full list of changes
+
+## About
+
 ZephIR tracks keypoints in a 2D or 3D movie by registering image descriptors sampled around each keypoint.
 Image registration loss is combined with three additional regularization terms:
 - spring connections between neighboring objects allow a flexible spatial model of loosely correlated motion
@@ -67,11 +75,11 @@ Make sure that **Python (>=3.8.1)** and the following packages are installed (pr
 
 3. Checkout the current release:
 ```bash
-git checkout v1.0.0
+git checkout v1.0.2
 ```
 Use the following command to see what's new in the most recent release:
 ```bash
-git show v1.0.0
+git show v1.0.2
 ```
 
 4. Install:

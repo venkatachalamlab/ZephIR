@@ -31,6 +31,7 @@
 - `lr_ceiling`: Maximum value for initial learning rate. Note that learning rate decays by a factor of 0.5 every 10 epochs. *default: 0.2*
     > *TIP:* If motion is small, set lower to ~0.1. Can use with clip_grad, but may be redundant.
 - `lr_coef`: Coefficient for initial learning rate, multiplied by the distance between current frame and its parent. *default: 2.0*
+    > *TIP:* If a dynamic learning rate is not necessary for your dataset, set to 0 or lower to disable. This will also skip calculation of distances between frames which can be very computationally costly for long datasets.
 - `lr_floor`: Minimum value for initial learning rate. *default: 0.02*
 - `motion_predict`: Enable parent-child flow field to predict low-frequency motion and initialize new keypoints positions for current frame. Requires partial annotations for that frame. *default: False*
     > *TIP:* Identify and annotate a critical subset of keypoints with large errors. These along with motion_predict can dramatically improve tracking quality. Note that this particular flow field does *not* affect descriptors to avoid distortion or image artifacts.
