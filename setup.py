@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 # from .zephir.__version__ import __version__
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 requirements = [
     'dataclasses>=0.6'

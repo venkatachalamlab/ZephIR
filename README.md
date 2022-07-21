@@ -10,10 +10,11 @@
 
 ZephIR is a multiple object tracking algorithm based on image registration and built on PyTorch. Check out our [preprint](https://www.biorxiv.org/content/10.1101/2022.07.18.500485v1) and [tutorial video](https://youtu.be/4O9aIftvoqM)!
 
-### Latest Updates in v1.0.1
+### Latest Updates in v1.0.2
 
-* new option `t_track` specifies a list of frames to analyze; supercedes existing option `t_ignore`
-* `save_movie` now only saves reference frames and tracked frames; use `include_all=True` to save all available frames (previous behavior)
+* `save_movie` now respects CLI option `channel` and draw the data in the corresponding channel (r=0, g=1, b>=2)
+* `sort_mode=linear` now uses a partial matrix of pairwise thumbnail distances instead of the full matrix to streamline the distance calculation
+* `lr_coef=-1` disables dynamic learning rate, setting the initial learning rate to `lr_floor` for *all* frames, regardless of distance to parent frame
 * see [release notes](https://github.com/venkatachalamlab/ZephIR/releases) for full list of changes
 
 ## About
