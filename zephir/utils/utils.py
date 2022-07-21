@@ -86,7 +86,7 @@ def pick_color(x):
     )
 
 
-def save_as_bgr(img, scale=(2, 1, 1), annotation=None, path=None, s=2):
+def save_as_bgr(img, scale=(2, 1, 1), c=None, annotation=None, path=None, s=2):
     if np.max(img) <= 1.0:
         img *= 255
 
@@ -94,10 +94,10 @@ def save_as_bgr(img, scale=(2, 1, 1), annotation=None, path=None, s=2):
     for channel in range(img.shape[0]):
         if np.max(img[channel, ...]) > 1e-8:
             composite.append(
-                    mip_threeview(
-                            np.uint8(img[channel, ...]),
-                            scale
-                    )
+                mip_threeview(
+                    np.uint8(img[channel, ...]),
+                    scale
+                )
             )
 
     if len(composite) == 3:
@@ -108,9 +108,22 @@ def save_as_bgr(img, scale=(2, 1, 1), annotation=None, path=None, s=2):
     elif len(composite) == 2:
         frame = compare_red_green(composite[0], composite[1])
     elif len(composite) == 1:
-        r = auto_lut(composite[0], newtype=np.uint8)
-        g = np.zeros_like(r)
-        b = np.zeros_like(r)
+        if c == 0 or c is None:
+            r = auto_lut(composite[0], newtype=np.uint8)
+            g = np.zeros_like(r)
+            b = np.zeros_like(r)
+        elif c == 1:
+            g = auto_lut(composite[0], newtype=np.uint8)
+            r = np.zeros_like(g)
+            b = np.zeros_like(g)
+        elif c >= 2:
+            b = auto_lut(composite[0], newtype=np.uint8)
+            r = np.zeros_like(b)
+            g = np.zeros_like(b)
+        else:
+            r = auto_lut(composite[0], newtype=np.uint8)
+            g = np.zeros_like(r)
+            b = np.zeros_like(r)
         frame = np.dstack([r, g, b])
     else:
         r = mip_threeview(np.uint8(img[0, ...]), scale)

@@ -56,7 +56,7 @@ def save_movie(
             if len(u) > len(w_idx):
                 u_idx = np.where(np.isin(u, worldline_id, invert=True))[0]
                 xyz_result = np.append(xyz_result, annot[u_idx, ...], axis=0)
-        overview = save_as_bgr(data, annotation=xyz_result)
+        overview = save_as_bgr(data, c=channel, annotation=xyz_result)
         cv2.putText(overview, f'Frame #{t}', (20, 20),
                     cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), thickness=1)
         overview_rec.write(overview[:, :, ::-1])
