@@ -20,7 +20,6 @@ def track_all(
     lambda_n,
     lambda_n_mode,
     lr_ceiling,
-    lr_coef,
     lr_floor,
     motion_predict,
     n_epoch,
@@ -43,6 +42,7 @@ def track_all(
     covar = container.get('covar')
     dev = container.get('dev')
     gamma = container.get('gamma')
+    lr_coef = container.get('lr_coef')
     n_frame = container.get('n_frame')
     neighbors = container.get('neighbors')
     partial_annot = container.get('partial_annot')
@@ -77,7 +77,10 @@ def track_all(
 
         # calculate initial learning rate based on parent-child distance
         distance = s_list[t]
-        lr_init = min(max(lr_coef * distance, lr_floor), lr_ceiling)
+        if lr_coef > 0 and distance > 0:
+            lr_init = min(max(lr_coef * distance, lr_floor), lr_ceiling)
+        else:
+            lr_init = lr_floor
         tqdm.write(f'\nFrame #{t}\t\tParent #{parent}'
                    f'\t\tReference #{t_annot[root]}'
                    f'\t\tDistance to parent: d={distance:.4f}')

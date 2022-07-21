@@ -54,6 +54,7 @@ def track_frame(
                             if args['--exclusive_prov'] else None),
             gamma=float(args['--gamma']),
             include_all=args['--include_all'] in ['True', 'Y', 'y'],
+            lr_coef=float(args['--lr_coef']),
             n_frame=int(args['--n_frame']),
             z_compensator=float(args['--z_compensator']),
         )
@@ -106,6 +107,7 @@ def track_frame(
             container=container,
             sort_mode=str(args['--sort_mode']),
             t_ignore=eval(args['--t_ignore']) if args['--t_ignore'] else None,
+            t_track=eval(args['--t_track']) if args['--t_track'] else None,
         )
     else:
         zephir = get_checkpoint(dataset, 'zephir')
@@ -134,7 +136,6 @@ def track_frame(
         lambda_n=float(args['--lambda_n']),
         lambda_n_mode=args['--lambda_n_mode'],
         lr_ceiling=float(args['--lr_ceiling']),
-        lr_coef=float(args['--lr_coef']),
         lr_floor=float(args['--lr_floor']),
         motion_predict=args['--motion_predict'] in ['True', 'Y', 'y'],
         n_epoch=int(args['--n_epoch']),

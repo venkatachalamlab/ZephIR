@@ -1,6 +1,6 @@
 from scipy.sparse.csgraph import shortest_path
 
-from .build_pdists import get_all_pdists
+from .build_pdists import get_all_pdists, get_partial_pdists
 from ..utils.utils import *
 
 
@@ -31,6 +31,7 @@ def build_tree(
     # pull variables from container
     dataset = container.get('dataset')
     channel = container.get('channel')
+    lr_coef = container.get('lr_coef')
     shape_t = container.get('shape_t')
     t_annot = container.get('t_annot')
 
@@ -40,13 +41,15 @@ def build_tree(
             np.unique(list(t_annot.copy()) + list(t_track))
         )
 
-    print('\nBuilding frame correlation graph...')
-    d_full = get_all_pdists(dataset, shape_t, channel, pbar=True)
-    if verbose:
-        fig = plt.figure(figsize=(10, 10))
-        plt.imshow(d_full)
-        plt.show()
-        fig.savefig(str(dataset / 'pw_distance.png'))
+    d_full = None
+    if (sort_mode == 'depth' or sort_mode == 'similarity') and lr_coef > 0:
+        print('\nBuilding frame correlation graph...')
+        d_full = get_all_pdists(dataset, shape_t, channel, pbar=True)
+        if verbose:
+            fig = plt.figure(figsize=(10, 10))
+            plt.imshow(d_full)
+            plt.show()
+            fig.savefig(str(dataset / 'pw_distance.png'))
     
     if sort_mode == 'depth':
         print('\nSorting frames by depth along shortest path...')
@@ -91,6 +94,7 @@ def build_tree(
         temp = np.arange(shape_t)
         t_tree = [t_annot]
         p_tree = [[-1 for _ in t_annot]]
+        r_tree = [[-1 for _ in t_annot]]
         for i in range(len(t_annot)):
             if t_annot[i] == 0:
                 b = np.array([])
@@ -102,6 +106,7 @@ def build_tree(
                 b = temp[(t_annot[i] + t_annot[i - 1]) // 2:t_annot[i]]
             t_tree.append(b[::-1])
             p_tree.append(b[::-1] + 1)
+            r_tree.append([i] * len(b))
 
             if t_annot[i] == shape_t - 1:
                 f = np.array([])
@@ -113,22 +118,35 @@ def build_tree(
                 f = temp[t_annot[i] + 1:(t_annot[i] + t_annot[i + 1]) // 2]
             t_tree.append(f)
             p_tree.append(f - 1)
+            r_tree.append([i] * len(f))
 
         t_list = np.concatenate(t_tree).astype(int)
         p_list = np.concatenate(p_tree)[np.argsort(t_list)].astype(int)
-        r_list = np.argmin(d_full[t_annot, :], axis=0)
+        r_list = np.concatenate(r_tree)[np.argsort(t_list)].astype(int)
         if t_ignore is not None:
             for t in list(t_ignore):
                 if p_list[t] > t > 0:
-                    p_list[t - 1] += 1
+                    p = p_list[t-1] + 1
+                    while p in list(t_ignore):
+                        p += 1
+                    p_list[t-1] = p
                 elif p_list[t] < t < shape_t - 1:
-                    p_list[t + 1] -= 1
+                    p = p_list[t+1] - 1
+                    while p in list(t_ignore):
+                        p -= 1
+                    p_list[t+1] = p
+                p_list[t] = -1
 
     t_list = np.setdiff1d(t_list, t_annot, assume_unique=True)
     if t_ignore is not None:
         t_list = np.setdiff1d(t_list, np.array(t_ignore), assume_unique=True)
 
-    s_list = get_undiscounted_scores_for_tree(d_full, p_list, shape_t)
+    if d_full is not None:
+        s_list = get_undiscounted_scores_for_tree(d_full, p_list, shape_t)
+    elif lr_coef > 0:
+        s_list = get_partial_pdists(dataset, shape_t, p_list, channel, pbar=True)
+    else:
+        s_list = np.zeros(shape_t)
     print(f'\nFrames sorted with max/mean distance'
           f'\t{np.max(s_list):.4f} / {np.mean(s_list):.4f}')
 
