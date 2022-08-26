@@ -9,9 +9,11 @@ from .create_track import create_track
 from .change_provenance import change_provenance
 from .update_frame import update_frame
 from .overwrite_zeir_checkpoint import overwrite_zeir_checkpoint
+from.classify_ift22 import classify_ift22
 
 __all__ = [
     "delete_annotations", "insert_local_max", "insert_annotation",
     "randomly_color_worldlines", "renumber_worldlines", "jump_to_frame",
-    "create_track", "change_provenance", "update_frame", "overwrite_zeir_checkpoint"
+    "create_track", "change_provenance", "update_frame", "overwrite_zeir_checkpoint",
+    "classify_ift22"
 ]
