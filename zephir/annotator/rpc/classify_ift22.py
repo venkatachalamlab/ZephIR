@@ -18,7 +18,7 @@ def classify_ift22(
     logger: Logger
 ) -> List[dict]:
     """
-    arg: time
+    arg: time,
         time: Time to run the NeuronClassifier on.
     """
 
