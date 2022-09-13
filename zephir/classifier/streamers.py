@@ -1,8 +1,9 @@
 import torch
 from torch.utils.data import Dataset
-from utils import *
 import torch.nn as nn
 import math
+
+from .utils import *
 
 
 class InferenceStreamer(Dataset):
@@ -31,12 +32,11 @@ class InferenceStreamer(Dataset):
 
     def __getitem__(self, idx):
         volume = self.volume_streamer[idx]
+        volume = volume.to(torch.float32).to(self.dev)
         u, annotation = get_annotation(self.annotations_df, idx)
 
         if len(annotation) == 0:
             return torch.tensor([]), torch.tensor([]), torch.tensor([]), []
-
-        fullAvgDists = []
 
         # iterate by frame through data
         # compute coordinates relative to centroid #
@@ -75,6 +75,7 @@ class InferenceStreamer(Dataset):
             normalizedAnnotation[n][1] /= avgNeuronDistancesY
             normalizedAnnotation[n][2] /= avgNeuronDistancesZ
 
+        fullAvgDists = []
         for n1 in range(len(annotation)):
             _landmarkDists = [-1, -1, -1, -1, -1, -1]
             neuronDists = []
@@ -84,6 +85,7 @@ class InferenceStreamer(Dataset):
                 dist = math.sqrt((curLoc[0]-otherLoc[0])**2+(curLoc[1]-otherLoc[1])**2+(curLoc[2]-otherLoc[2])**2)
                 neuronDists.append(dist)
             fullAvgDists += sorted(neuronDists)[1:4]
+        fullAvgDists = torch.tensor(fullAvgDists).to(torch.float32)
 
         croppedVolumes = []
         for neuron in annotation:
@@ -93,61 +95,49 @@ class InferenceStreamer(Dataset):
             padding = nn.ConstantPad3d((13, 13, 13, 13, 4, 4), 0)
             paddedVol = padding(volume)
             croppedVolume = paddedVol[:, z+2:z+7, y+4:y+23, x+4:x+23]
-            croppedVolume = torch.div(croppedVolume, np.mean(volume.numpy()))
-            croppedVolume = torch.div(croppedVolume, np.max(croppedVolume.numpy()))
+            croppedVolume = torch.div(croppedVolume, torch.mean(volume))
+            croppedVolume = torch.div(croppedVolume, torch.max(croppedVolume))
             if croppedVolume.shape != (3, 5, 19, 19):
-                print(x,y,z)
+                print(x, y, z)
                 print(volume.shape)
                 print(paddedVol.shape)
                 print(croppedVolume.shape)
 
             # need to detect when indexing goes below 0 or over max size
             # need to handle improper indexing cases (pad original volume?)
-            croppedVolumes.append(np.array(croppedVolume))
-        croppedVolumes = np.array(croppedVolumes)
-        croppedVolumes = croppedVolumes / np.max(croppedVolumes)
+            croppedVolumes.append(croppedVolume)
+        croppedVolumes = torch.stack(croppedVolumes, dim=0)
+        croppedVolumes = croppedVolumes / torch.max(croppedVolumes)
 
         # croppedVolumes = np.where(np.array(croppedVolumes) > 0.05, 1, 0)
-        croppedVolumes = torch.tensor(np.array(croppedVolumes))
 
-        volumesReshape = croppedVolumes[:, 1, ...].view((-1, *croppedVolumes.shape[3:6]))
+        volumesReshape = croppedVolumes[:, 1, ...].view((-1, *croppedVolumes.shape[-3:]))
         volumesReshape = volumesReshape.to(torch.float32)
-        normalizedAnnotation = torch.tensor(normalizedAnnotation).view((-1, 3))
-        normalizedAnnotation = normalizedAnnotation.to(torch.float32)
-
+        normalizedAnnotation = torch.tensor(normalizedAnnotation).to(torch.float32)
 
         brightness_list = []
-        for volume in volumesReshape:
-            miniVol = volume[((volume.shape[0] // 2) - 1):((volume.shape[0] // 2) + 1),
-                             ((volume.shape[1] // 2) - 3):((volume.shape[1] // 2) + 3),
-                             ((volume.shape[2] // 2) - 3):((volume.shape[2] // 2) + 3)]
-            brightness = np.mean(miniVol.numpy())*100
+        for v in volumesReshape:
+            miniVol = v[((v.shape[0] // 2) - 1):((v.shape[0] // 2) + 1),
+                        ((v.shape[1] // 2) - 3):((v.shape[1] // 2) + 3),
+                        ((v.shape[2] // 2) - 3):((v.shape[2] // 2) + 3)]
+            brightness = torch.mean(miniVol)*100
             brightness_list.append(brightness)
-        avgBrightness = sum(brightness_list) / len(brightness_list)
+        brightness_list = torch.stack(brightness_list, dim=0).to(torch.float32)
+        avgBrightness = torch.mean(brightness_list)
+        if avgBrightness != 0:
+            brightness_list = brightness_list / avgBrightness
 
-        for n in range(len(brightness_list)):
-            if avgBrightness != 0:
-                brightness_list[n] /= avgBrightness
-
-        brightnessList = torch.tensor(np.array(brightness_list))
-        brightnessList = brightnessList.view(volumesReshape.shape[0], 1)
-        brightnessList = brightnessList.to(torch.float32)
-
-        fullAvgDists = torch.tensor(np.array(fullAvgDists))
-        fullAvgDists = fullAvgDists.view(volumesReshape.shape[0], 3)
-        fullAvgDists = fullAvgDists.to(torch.float32)
-
-        coordinates = normalizedAnnotation.view((-1, 3))
-        brightness = brightnessList.view((-1, 1))
-        coordinates = torch.cat((coordinates, brightness), -1)
-        avgDists = fullAvgDists.view((-1, 3))
-        coordinates = torch.cat((coordinates, avgDists), -1)
+        coordinates = normalizedAnnotation.view((-1, 3)).to(self.dev)
+        _brightness = brightness_list.view((-1, 1)).to(self.dev)
+        coordinates = torch.cat((coordinates, _brightness), -1)
+        _avgDists = fullAvgDists.view((-1, 3)).to(self.dev)
+        coordinates = torch.cat((coordinates, _avgDists), -1)
 
         # volumesReshape.shape = (N*T, C, Z, Y, X)
         return (
-            volumesReshape.to(self.dev).to(torch.float32),
+            volumesReshape.to(self.dev).to(torch.float32).unsqueeze(1),
             coordinates.to(self.dev).view(-1, 7).to(torch.float32),
-            u.to(self.dev).to(torch.float32)
+            u
         )
 
 

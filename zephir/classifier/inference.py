@@ -1,8 +1,8 @@
 import copy
 from numpy import unravel_index
 
-from streamers import *
-from model import NeuronClassifier
+from .streamers import *
+from .model import NeuronClassifier
 
 
 def perform_inference(
@@ -53,9 +53,9 @@ def perform_inference(
 
     if input_vol.shape[-1] == 0:
         return [], []
-    # print(input_vol.shape, input_lin.shape)
-    input_vol = input_vol.view((-1, 1, *input_vol.shape[1:4]))
-    input_lin = input_lin.view((-1, input_lin.shape[1]))
+    print(input_vol.shape, input_lin.shape)
+    print(wlid_list)
+
     pred_lm = model(input_vol, input_lin)
     pred_lm = pred_lm.detach().cpu().numpy()
 
@@ -123,6 +123,8 @@ def perform_inference(
             named_output.append(
                 input_streamer.essential_neurons[int(val)].decode("utf-8")
             )
+    print(wlid_list)
+    print(named_output)
 
     return wlid_list, named_output
 

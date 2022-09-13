@@ -1,4 +1,4 @@
-__version__ = '1.0.2'
+__version__ = '1.0.2c-dev0'
 # from pathlib import Path
 # import subprocess
 #

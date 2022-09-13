@@ -1,18 +1,14 @@
-import torch
-import torch.optim as optim
-from torch.utils.data import TensorDataset, DataLoader, random_split, Subset
-from tqdm import tqdm
-
-from utils import *
-from streamers import *
-from model import NeuronClassifier
-
+import copy
 import matplotlib.pyplot as plt
 from sklearn.metrics import ConfusionMatrixDisplay
+import torch
+import torch.optim as optim
+from torch.utils.data import DataLoader, Subset
+from tqdm import tqdm
 
-from numpy import unravel_index
+from .streamers import *
+from .model import NeuronClassifier
 
-import copy
 
 def main(
         root_path,
@@ -258,7 +254,7 @@ def main(
                     pred = val_pred[neuronCounter:neuronCounter+numNeurons[f]]
                     landmarkNeuronID = [0, 0, 0, 0, 0, 0]
                     for i in range(numNeurons[f]):
-                        maxLoc = unravel_index(pred.argmax(), pred.shape)
+                        maxLoc = np.unravel_index(pred.argmax(), pred.shape)
                         predsAndTruths.append((maxLoc[1], namesLandmark[neuronCounter+maxLoc[0]]))
                         x = [float('-inf')]*7
                         y = [float('-inf')]*numNeurons[f]
@@ -324,16 +320,13 @@ def main(
                 for f in range(len(numNeurons)):
                     pred = val_preds[neuronCounter:neuronCounter+numNeurons[f]].cpu().numpy()
                     for j in range(numNeurons[f]):
-                        maxLoc = unravel_index(pred.argmax(), pred.shape)
+                        maxLoc = np.unravel_index(pred.argmax(), pred.shape)
                         predsAndTruths.append((maxLoc[1], names[neuronCounter+maxLoc[0]]))
                         x = [float('-inf')]*22
                         y = [float('-inf')]*numNeurons[f]
                         pred[:, maxLoc[1]] = y
                         pred[maxLoc[0]] = x
                     neuronCounter += numNeurons[f]
-
-
-
 
                 for pred, truth in predsAndTruths:
                     if pred == truth:
