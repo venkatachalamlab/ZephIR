@@ -53,8 +53,6 @@ def perform_inference(
 
     if input_vol.shape[-1] == 0:
         return [], []
-    print(input_vol.shape, input_lin.shape)
-    print(wlid_list)
 
     pred_lm = model(input_vol, input_lin)
     pred_lm = pred_lm.detach().cpu().numpy()
@@ -116,12 +114,12 @@ def perform_inference(
         pred[max_loc[0]] = [float('-inf')] * 22
 
     named_output = []
-    for val in output:
+    for i, val in enumerate(output):
         if val == -1:
-            named_output.append('none')
+            named_output.append(f'{wlid_list[i]}'.encode('utf-8'))
         else:
             named_output.append(
-                input_streamer.essential_neurons[int(val)].decode("utf-8")
+                input_streamer.essential_neurons[int(val)]
             )
     print(wlid_list)
     print(named_output)
@@ -133,6 +131,6 @@ if __name__ == '__main__':
     dataset = Path('/Users/arvin/Documents/RSI/neuron-classifier/data')
     annotations = get_annotation_df(dataset)
     worldlines = get_worldlines_df(dataset)
-    results = perform_inference(dataset, annotations, worldlines)
+    results = perform_inference(dataset, annotations, worldlines, 0)
     print(len(results))
     print(results)

@@ -47,7 +47,7 @@ def classify_ift22(
     new_names = [b'null'] * len(worldlines)
     for i, w in enumerate(worldlines.df.id):
         if w in wlid:
-            idx = wlid.index(w)
+            idx = list(wlid).index(w)
             new_names[i] = names[idx]
         else:
             new_names[i] = worldlines.get(w).name
