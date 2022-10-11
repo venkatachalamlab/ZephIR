@@ -145,6 +145,10 @@ def track_all(
                     grad=False, dev=dev
                 )
                 k_ij = lambda_n * torch.relu(k_ij)
+            elif torch.max(d_ref) < 0:
+                k_ij = torch.zeros_like(
+                    to_tensor(ind), requires_grad=False, device=dev
+                )
             else:
                 k_ij = lambda_n * torch.ones_like(
                     to_tensor(ind), requires_grad=False, device=dev

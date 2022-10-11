@@ -92,8 +92,10 @@ def build_springs(
                 )
 
     else:
-        neighbors = [np.tile(np.arange(0, shape_n)[:, None], (1, nn_max))
-                     for _ in t_annot]
+        neighbors = [np.append(
+            np.arange(0, shape_n)[:, None, None],
+            -1 * np.ones((shape_n, 1, 3)),
+            axis=-1) for _ in t_annot]
 
     if verbose:
         data = get_data(dataset, t_annot[0])
