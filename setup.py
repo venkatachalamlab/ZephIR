@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 # from .zephir.__version__ import __version__
-__version__ = '1.0.2'
+__version__ = '1.0.3'
 
 requirements = [
     'dataclasses>=0.6'
@@ -35,6 +35,7 @@ setup(
     entry_points={'console_scripts': [
         'zephir=zephir.main:main',
         'annotator=zephir.annotator.main:main',
+        'auto_annotate=zephir.methods.auto_annotate:main',
         'extract_traces=zephir.methods.extract_traces:main',
         'overwrite_checkpoint=zephir.methods.overwrite_checkpoint:main',
         'recommend_frames=zephir.methods.recommend_frames:main',
