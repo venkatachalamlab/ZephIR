@@ -3,6 +3,7 @@ import random
 
 from inspect import getmembers, isfunction
 from scipy.ndimage import rotate
+from skimage.transform import resize
 # from stardist.models import StarDist2D
 
 from . import channels
@@ -11,6 +12,9 @@ from ..utils.utils import *
 
 
 def identify(vol, annotations, r_crop):
+    if np.max(vol) <= 1.0:
+        vol = (vol * 255).astype(np.uint8)
+
     isolates = []
 
     for annot in annotations:

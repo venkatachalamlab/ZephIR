@@ -10,7 +10,6 @@ from ..utils.utils import *
 
 class ZephOD(nn.Module):
     def __init__(self,
-                 img_shape=(17, 130, 420),
                  n_channels_in=6,
                  n_channels_out=1,
                  init_nodes=16,
@@ -20,7 +19,6 @@ class ZephOD(nn.Module):
 
         super(ZephOD, self).__init__()
 
-        self.img_shape = img_shape
         self.n_channels_in = n_channels_in
         self.n_channels_out = n_channels_out
         self.init_nodes = init_nodes
