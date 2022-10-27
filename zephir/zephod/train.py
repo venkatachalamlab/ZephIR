@@ -58,23 +58,25 @@ def train_model(
     isolates_agg = []
     for dataset in dataset_paths:
         annotation = get_annotation_df(dataset)
-        # t_note = np.unique(annotation['t_idx']).astype(int)
-        # t_note = np.sort(t_note)
-        t_note = np.array([0])          # delete this later!
+        t_note = np.unique(annotation['t_idx']).astype(int)
+        t_note = np.sort(t_note)
         nn_list = [len(get_annotation(annotation, t)[0]) for t in t_note]
         n_neuron, t_neuron = np.max(nn_list), t_note[np.argmax(nn_list)]
         worldline_id, _, _ = get_annotation(annotation, t_neuron)
         print(f'\nUsing frame #{t_neuron} as initial reference with {n_neuron} annotations found...')
 
+        metadata = get_metadata(dataset)
+        shape_t = metadata['shape_t']
         xyz_note = []
         for t in t_note:
             u, annot, prov = get_annotation(annotation, t)
             u_idx = np.array([np.where(u == w)[0][-1] for w in worldline_id if w in u], dtype=int)
             annot = annot[u_idx, ...]
-            if annot.shape[0] > n_neuron or annot.shape[0] == 0:
-                t_note = np.setdiff1d(t_note, [t])
-                continue
-            elif annot.shape[0] < n_neuron:
+            if (t >= shape_t
+                    or annot.shape[0] > n_neuron
+                    or annot.shape[0] < n_neuron
+                    or annot.shape[0] == 0
+                ):
                 t_note = np.setdiff1d(t_note, [t])
                 continue
             xyz_note.append(annot)
@@ -92,7 +94,7 @@ def train_model(
         for i in pbar:
             # for i in range(len(t_note)):
             data = get_data(dataset, t_note[i], c=channel)
-            isolated_neurons = identify(data, annots[i], 6)
+            isolated_neurons = identify(data, annots[i], 12)
             for n in isolated_neurons:
                 isolates_agg.append(n)
             pbar.set_postfix(Neurons=f'{len(isolates_agg)}')
@@ -126,10 +128,10 @@ def train_model(
     t_val = t_note_agg[-n_val:]
 
     print('\n\n\n******* BEGIN TRAINING *******\n')
+    model.train()
     pbar = tqdm(range(n_epoch), desc='Training model', unit='epochs')
     for epoch in pbar:
         # for epoch in range(n_epoch):
-        model.train()
         tpbar = tqdm(range(n_trn), leave=False, desc='Training samples', unit='vol')
         for _ in tpbar:
             # for i in range(n_trn):
@@ -142,7 +144,7 @@ def train_model(
                 for j in range(batch_size):
                     t_idx = random.randint(0, len(t_note_agg[d_idx]) - 1)
                     synth, labels = generate_synthetic_data(
-                        vol, annots_agg[d_idx][t_idx], isolates_agg, True
+                        vol, annots_agg[d_idx][t_idx], isolates_agg, True, True
                     )
                     input_list.append(to_tensor(synth, dev=dev))
                     target_list.append(to_tensor(labels, dev=dev))
@@ -154,41 +156,16 @@ def train_model(
             loss.backward()
             with torch.no_grad():
                 tpbar.set_postfix(Loss=f'{loss.item():.4f}')
-        optimizer.step()
-
-        with torch.no_grad():
-            if n_val > 0:
-                model.eval()
-                input_val, target_val = [], []
-                for i in tqdm(range(len(t_val)), leave=False, desc='Validating samples', unit='vol'):
-                    # for i in range(len(t_val)):
-                    dataset = dataset_paths[-n_val + i]
-                    vol = get_data(dataset, t_note_agg[-n_val + i][0], c=channel)
-                    for j in range(len(t_note_agg[-n_val + i])):
-                        synth, labels = generate_synthetic_data(
-                            vol, annots_agg[-n_val + i][j], isolates_agg, True
-                        )
-                        input_val.append(to_tensor(synth, dev=dev))
-                        target_val.append(to_tensor(labels, dev=dev))
-                input_val, target_val = torch.stack(input_val, dim=0), torch.stack(target_val, dim=0)
-                val_pred = model(input_val)
-                val_loss = loss_function(val_pred, target_val)
-            else:
-                val_loss = 0.
-        pbar.set_postfix(Loss=f'{loss.item():.4f}', Validation_loss=f'{val_loss:.4f}')
-
-        with torch.no_grad():
-            if epoch > 0 and (epoch + 1) % 10 == 0:
-                print(f'Epoch: {epoch + 1:3} / {n_epoch}'
-                      f'\t\tLoss: {loss:.4f}\t\tVal loss: {val_loss:.4f}')
-
-    checkpoint = {
-        'model_kwargs': model_kwargs,
-        'state_dict': model.state_dict(),
-        'opt_dict': optimizer.state_dict(),
-    }
-
+                pbar.set_postfix(Loss=f'{loss.item():.4f}')
+            optimizer.step()
+    
     with torch.no_grad():
+        checkpoint = {
+            'model_kwargs': model_kwargs,
+            'state_dict': model.state_dict(),
+            'opt_dict': optimizer.state_dict(),
+        }
+
         input_val = target_val = val_pred = None
         if n_val > 0:
             model.eval()
@@ -199,12 +176,14 @@ def train_model(
                 vol = get_data(dataset, t_note_agg[-n_val + i][0], c=channel)
                 for j in range(len(t_note_agg[-n_val + i])):
                     synth, labels = generate_synthetic_data(
-                        vol, annots_agg[-n_val + i][j], isolates_agg, True
+                        vol, annots_agg[-n_val + i][j], isolates_agg, True, True
                     )
                     input_val.append(to_tensor(synth, dev=dev))
                     target_val.append(to_tensor(labels, dev=dev))
             input_val, target_val = torch.stack(input_val, dim=0), torch.stack(target_val, dim=0)
             val_pred = model(input_val)
+            val_loss = loss_function(val_pred, target_val)
+            print(f'\nValidation loss: {val_loss.item():.4f}\n\n')
 
     return checkpoint, (input_val, target_val, val_pred), (to_numpy(model.alpha), to_numpy(model.gamma))
 
@@ -272,8 +251,6 @@ def main():
         print('\nSaving prediction to a new file...')
         if not (checkpoint_path.parent / 'bin').is_dir():
             Path.mkdir(checkpoint_path.parent / 'bin')
-        print(input_val.shape, val_pred.shape, target_val.shape)
-
         fig, axes = plt.subplots(1, 3, figsize=(24, 6))
         axes[0].imshow(np.max(np.max(to_numpy(input_val[0]), axis=0), axis=0), vmin=0, vmax=1)
         axes[0].set_title('Input Volume')

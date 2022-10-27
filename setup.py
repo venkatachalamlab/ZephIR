@@ -39,7 +39,8 @@ setup(
         'extract_traces=zephir.methods.extract_traces:main',
         'overwrite_checkpoint=zephir.methods.overwrite_checkpoint:main',
         'recommend_frames=zephir.methods.recommend_frames:main',
-        'zephod=zephir.zephod.main:main'
+        'train_zephod=zephir.zephod.train:main',
+        'zephod=zephir.zephod.main:main',
     ]},
     include_package_data=True,
     zip_safe=False,

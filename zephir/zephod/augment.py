@@ -19,8 +19,8 @@ def identify(vol, annotations, r_crop):
 
     for annot in annotations:
         x, y, z = get_pixel(annot, vol.shape[1:])
-        slice_yx = np.max(vol[0, max(0, z-1):z+1, y-r_crop:y+r_crop, x-r_crop:x+r_crop], axis=0)
-        slice_zy = np.max(vol[0, max(0, z-2):z+2, y-r_crop:y+r_crop, x-1:x+1], axis=2)
+        slice_yx = np.max(vol[0, max(0, z-1):z+2, y-r_crop:y+r_crop, x-r_crop:x+r_crop], axis=0)
+        slice_zy = np.max(vol[0, max(0, z-2):z+3, y-r_crop:y+r_crop, x-1:x+2], axis=-1)
         # contours_yx = measure.find_contours(slice_yx, 0.8)
         # contours_zy = measure.find_contours(slice_zy, 0.8)
         contours_yx = cv2.findContours(slice_yx, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[0]
@@ -28,7 +28,7 @@ def identify(vol, annotations, r_crop):
         if len(contours_yx) != 1 or len(contours_zy) != 1:
             continue
 
-        crop = vol[:, max(0, z-2):z+2, y-r_crop:y+r_crop, x-r_crop:x+r_crop].copy()
+        crop = vol[:, max(0, z-2):z+3, y-r_crop:y+r_crop, x-r_crop:x+r_crop].copy()
         for channel in range(crop.shape[0]):
             for zslice in range(crop.shape[1]):
                 if channel == 0:
@@ -50,56 +50,61 @@ def identify(vol, annotations, r_crop):
     return isolates
 
 
-def generate_synthetic_data(vol, annotations, isolates, preprocess=False):
+def generate_synthetic_data(vol, annotations, isolates, preprocess=False, use_original=False):
     synthetic = np.zeros_like(vol)
+    if use_original:
+        synthetic = vol.copy()
+
     labels = np.zeros((1, *vol.shape[1:]))
     for n, annot in enumerate(annotations):
         x, y, z = get_pixel(annot, vol.shape[1:])
-        neuron = isolates[random.randint(0, len(isolates)-1)]
 
-        rotate_idx = random.randint(0, 1)
-        if rotate_idx == 1:
-            neuron = rotate_neuron(neuron)
+        if not use_original:
+            neuron = isolates[random.randint(0, len(isolates)-1)]
 
-        resize_idx = random.randint(0, 1)
-        if resize_idx == 1:
-            neuron = resize_neuron(neuron)
+            rotate_idx = random.randint(0, 1)
+            if rotate_idx == 1:
+                neuron = rotate_neuron(neuron)
 
-        reposition_idx = random.randint(0, 1)
-        if reposition_idx == 1:
-            x += random.randrange(-5, 5)
-            y += random.randrange(-5, 5)
-        #     z += random.randrange(-1, 1)
+            resize_idx = random.randint(0, 1)
+            if resize_idx == 1:
+                neuron = resize_neuron(neuron)
 
-        while z-neuron.shape[1]//2 < 0:
-            z += 1
-        while z-neuron.shape[1]//2+neuron.shape[1] > synthetic.shape[1]:
-            z += -1
-        while y-neuron.shape[2]//2 < 0:
-            y += 1
-        while y-neuron.shape[2]//2+neuron.shape[2] > synthetic.shape[2]:
-            y += -1
-        while x-neuron.shape[3]//2 < 0:
-            x += 1
-        while x-neuron.shape[3]//2+neuron.shape[3] > synthetic.shape[3]:
-            x += -1
+            reposition_idx = random.randint(0, 1)
+            if reposition_idx == 1:
+                x += random.randrange(-5, 5)
+                y += random.randrange(-5, 5)
+            #     z += random.randrange(-1, 1)
 
-        synthetic[
-            :, z-neuron.shape[1]//2:z-neuron.shape[1]//2+neuron.shape[1],
-            y-neuron.shape[2]//2:y-neuron.shape[2]//2+neuron.shape[2],
-            x-neuron.shape[3]//2:x-neuron.shape[3]//2+neuron.shape[3]
-        ] = np.max(
-            np.append(
-                synthetic[
-                    np.newaxis, :,
-                    z-neuron.shape[1]//2:z-neuron.shape[1]//2+neuron.shape[1],
-                    y-neuron.shape[2]//2:y-neuron.shape[2]//2+neuron.shape[2],
-                    x-neuron.shape[3]//2:x-neuron.shape[3]//2+neuron.shape[3]
-                ], neuron[np.newaxis, ...],
+            while z-neuron.shape[1]//2 < 0:
+                z += 1
+            while z-neuron.shape[1]//2+neuron.shape[1] > synthetic.shape[1]:
+                z += -1
+            while y-neuron.shape[2]//2 < 0:
+                y += 1
+            while y-neuron.shape[2]//2+neuron.shape[2] > synthetic.shape[2]:
+                y += -1
+            while x-neuron.shape[3]//2 < 0:
+                x += 1
+            while x-neuron.shape[3]//2+neuron.shape[3] > synthetic.shape[3]:
+                x += -1
+
+            synthetic[
+                :, z-neuron.shape[1]//2:z-neuron.shape[1]//2+neuron.shape[1],
+                y-neuron.shape[2]//2:y-neuron.shape[2]//2+neuron.shape[2],
+                x-neuron.shape[3]//2:x-neuron.shape[3]//2+neuron.shape[3]
+            ] = np.max(
+                np.append(
+                    synthetic[
+                        np.newaxis, :,
+                        z-neuron.shape[1]//2:z-neuron.shape[1]//2+neuron.shape[1],
+                        y-neuron.shape[2]//2:y-neuron.shape[2]//2+neuron.shape[2],
+                        x-neuron.shape[3]//2:x-neuron.shape[3]//2+neuron.shape[3]
+                    ], neuron[np.newaxis, ...],
+                    axis=0
+                ),
                 axis=0
-            ),
-            axis=0
-        )
+            )
 
         labels[:, z, y, x] = 1
 
@@ -146,4 +151,4 @@ def resize_neuron(neuron, shape=None):
                 neuron[channel, zslice],
                 shape
             )
-    return (resized * 255).astype(neuron.dtype)
+    return resized.astype(neuron.dtype)
