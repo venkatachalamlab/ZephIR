@@ -10,11 +10,10 @@
 
 ZephIR is a multiple object tracking algorithm based on image registration and built on PyTorch. Check out our [preprint](https://www.biorxiv.org/content/10.1101/2022.07.18.500485v1) and [tutorial video](https://youtu.be/4O9aIftvoqM)!
 
-### Latest Updates in v1.0.2
+### Latest Updates in v1.0.3
 
-* `save_movie` now respects CLI option `channel` and draw the data in the corresponding channel (r=0, g=1, b>=2)
-* `sort_mode=linear` now uses a partial matrix of pairwise thumbnail distances instead of the full matrix to streamline the distance calculation
-* `lr_coef=-1` disables dynamic learning rate, setting the initial learning rate to `lr_floor` for *all* frames, regardless of distance to parent frame
+* better support for single-keypoint tracking
+* major updates to keypoint detection algorithm (ZephOD), including a new CLI command: `auto_annotate` for automatically annotating a frame with detected keypoints without linking (i.e. identity-blind)
 * see [release notes](https://github.com/venkatachalamlab/ZephIR/releases) for full list of changes
 
 ## About
@@ -76,11 +75,11 @@ Make sure that **Python (>=3.8.1)** and the following packages are installed (pr
 
 3. Checkout the current release:
 ```bash
-git checkout v1.0.2
+git checkout v1.0.3
 ```
 Use the following command to see what's new in the most recent release:
 ```bash
-git show v1.0.2
+git show v1.0.3
 ```
 
 4. Install:
