@@ -118,8 +118,9 @@ def train_model(
         print('Loading model from existing state_dict...')
         model.load_state_dict(state_dict)
     optimizer = optim.Adadelta(model.parameters(), lr=lr_init)
+    scaler = torch.cuda.amp.GradScaler()
     if loss_func == 'BCE':
-        loss_function = nn.BCELoss()
+        loss_function = nn.BCEWithLogitsLoss()
     else:
         loss_function = corr_loss
 
@@ -148,16 +149,21 @@ def train_model(
                     )
                     input_list.append(to_tensor(synth, dev=dev))
                     target_list.append(to_tensor(labels, dev=dev))
-                input_tensor, target_tensor = torch.stack(input_list, dim=0), torch.stack(target_list, dim=0)
+                input_tensor, target_tensor = torch.stack(input_list, dim=0).to(torch.float16), torch.stack(target_list, dim=0).to(torch.float16)
 
             optimizer.zero_grad()
-            pred = model(input_tensor)
-            loss = loss_function(pred, target_tensor)
-            loss.backward()
+            with torch.autocast(device_type=dev):
+                pred = model(input_tensor)
+                loss = loss_function(pred, target_tensor)
+            # loss.backward()
+            # optimizer.step()
+            scaler.scale(loss).backward()
+            scaler.step(optimizer)
+            scaler.update()
+
             with torch.no_grad():
                 tpbar.set_postfix(Loss=f'{loss.item():.4f}')
                 pbar.set_postfix(Loss=f'{loss.item():.4f}')
-            optimizer.step()
     
     with torch.no_grad():
         checkpoint = {
@@ -195,9 +201,9 @@ def main():
     if torch.cuda.is_available() and args['--cuda'] in ['True', 'Y', 'y']:
         # Moving to GPU
         print('\n*** GPU available!\n')
-        dev = torch.device('cuda:0')
+        dev = 'cuda'
     else:
-        dev = torch.device('cpu')
+        dev = 'cpu'
 
     if args['--model'] is None:
         name = 'model'
