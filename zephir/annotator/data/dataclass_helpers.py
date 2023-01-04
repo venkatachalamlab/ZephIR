@@ -40,8 +40,10 @@ class DataclassTableBase:
         self.df = pd.DataFrame(columns=self.column_types)
 
         if data is not None:
-            self.df = pd.concat([self.df, data])
-
+            if self.df.empty:
+                self.df = data.copy()
+            else:
+                self.df = pd.concat([self.df, data])
         self.next_id = np.max(self.df['id']) + 1
         if np.isnan(self.next_id):
             self.next_id = 1

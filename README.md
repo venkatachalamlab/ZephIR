@@ -10,10 +10,9 @@
 
 ZephIR is a multiple object tracking algorithm based on image registration and built on PyTorch. Check out our [preprint](https://www.biorxiv.org/content/10.1101/2022.07.18.500485v1) and [tutorial video](https://youtu.be/4O9aIftvoqM)!
 
-### Latest Updates in v1.0.3
+### Latest Updates in v1.0.4
 
-* better support for single-keypoint tracking
-* major updates to keypoint detection algorithm (ZephOD), including a new CLI command: `auto_annotate` for automatically annotating a frame with detected keypoints without linking (i.e. identity-blind)
+* bug fixes for deprecated dependencies
 * see [release notes](https://github.com/venkatachalamlab/ZephIR/releases) for full list of changes
 
 ## About
@@ -41,7 +40,7 @@ We provide some support for exporting ZephIR results to [DeepLabCut](https://git
 ### Quick start
 
 ```bash
-pip install docopt pandas==1.4.2 zephir
+pip install docopt flask==2.1.2 pandas==1.4.2 zephir
 ```
 
 ### Dependencies
@@ -63,6 +62,8 @@ Make sure that **Python (>=3.8.1)** and the following packages are installed (pr
   - setuptools (>=61.2.0)
   - torch (>=1.10.0) (see [PyTorch.org](https://pytorch.org/get-started/locally/) for instructions on installing with CUDA)
   - tqdm (>=4.64.0)
+> **NOTE**: If you run into an issue when launching the annotator, you may need to downgrade `Flask` (2.1.2) and `Pandas` (1.4.2).
+
 
 ### Build from source
 
@@ -75,11 +76,11 @@ Make sure that **Python (>=3.8.1)** and the following packages are installed (pr
 
 3. Checkout the current release:
 ```bash
-git checkout v1.0.3
+git checkout v1.0.4
 ```
 Use the following command to see what's new in the most recent release:
 ```bash
-git show v1.0.3
+git show v1.0.4
 ```
 
 4. Install:

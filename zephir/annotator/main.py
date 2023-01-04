@@ -205,7 +205,7 @@ def get_binary_image(t, view, view_idx):
 
     return send_file(buffer,
                      as_attachment=True,
-                     attachment_filename="data.bin",
+                     download_name="data.bin",
                      mimetype="application/octet-stream")
 
 
