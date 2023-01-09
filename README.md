@@ -62,6 +62,12 @@ Make sure that **Python (>=3.8.1)** and the following packages are installed (pr
   - setuptools (>=61.2.0)
   - torch (>=1.10.0) (see [PyTorch.org](https://pytorch.org/get-started/locally/) for instructions on installing with CUDA)
   - tqdm (>=4.64.0)
+
+> **NOTE**: To enable GPU acceleration, you need to compile PyTorch with CUDA by following the instructions on [PyTorch.org](https://pytorch.org/get-started/locally/). 
+Using the quick installation command will *not* install CUDA-enabled PyTorch automatically. 
+This installation may also produce an `OMP: Error #15`. 
+If you run into this issue, check your `numpy` and `numpy-base` versions and if they disagree, update one or the other to match.  
+
 > **NOTE**: If you run into an issue when launching the annotator, you may need to downgrade `Flask` (2.1.2) and `Pandas` (1.4.2).
 
 
