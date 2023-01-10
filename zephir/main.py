@@ -20,7 +20,7 @@ Options:
     --clip_grad=<clip_grad>             maximum value for gradients; use -1 to uncap gradients. [default: 1.0]
     --cuda=<cuda>                       check if a CUDA-compatible GPU is available for  use. [default: True]
     --dimmer_ratio=<dimmer_ratio>       ratio to dim out non-foveated regions. [default: 0.1]
-    --exclude_self=<excluse_self>       exclude annotations with provenance 'NEIR'. [default: True]
+    --exclude_self=<excluse_self>       exclude annotations with provenance 'ZEIR'. [default: True]
     --exclusive_prov=<exclusive_prov>   only load annotations with given provenance.
     --fovea_sigma=<fovea_sigma>         sigma for gaussian mask for foveated regions; use -1 to disable. [default: 2.5]
     --gamma=<gamma>                     gamma correction coefficient. [default: 2]
