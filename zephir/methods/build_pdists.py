@@ -51,7 +51,7 @@ def get_all_pdists(dataset, shape_t, channel,
             return pdcc
 
     print('Compiling thumbnails...')
-    pool = Pool(max(os.cpu_count()-1, 1))
+    pool = Pool(max(os.cpu_count()-4, 1))
     thumbnails = [pool.apply_async(
         get_thumbnail, [dataset, channel, t, scale]
     ) for t in range(shape_t)]
@@ -60,7 +60,8 @@ def get_all_pdists(dataset, shape_t, channel,
     for i in (tqdm(range(shape_t), desc='Calculating distances', unit='frames')
               if pbar else range(shape_t)):
 
-        for j in range(i+1, shape_t):
+        # for j in range(i+1, shape_t):
+        for j in tqdm(range(i+1, shape_t), desc='Calculating distances', unit='frames', leave=False):
             dist = dist_fn(thumbnails[i].get(), thumbnails[j].get())
             if np.isnan(dist):
                 d[i, j] = 2.0

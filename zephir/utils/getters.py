@@ -19,8 +19,8 @@ def get_slice(dataset: Path, t: int) -> np.ndarray:
     with the dimensions ordered as (C, Z, Y, X).
     """
     h5_filename = dataset / "data.h5"
-    f = h5py.File(h5_filename, 'r')
-    return f["data"][t]
+    with h5py.File(h5_filename, 'r') as f:
+        return f["data"][t]
 
 
 def get_annotation_df(dataset: Path) -> pd.DataFrame:

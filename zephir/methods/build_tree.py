@@ -36,10 +36,17 @@ def build_tree(
     t_annot = container.get('t_annot')
 
     if t_track is not None:
+        if type(t_track) is int:
+            t_track = [t_track]
         t_ignore = np.setdiff1d(
             np.arange(shape_t),
             np.unique(list(t_annot.copy()) + list(t_track))
         )
+
+    if t_ignore is not None:
+        if type(t_ignore) is int:
+            t_ignore = [t_ignore]
+        t_ignore = list(t_ignore)
 
     d_full = None
     if (sort_mode == 'depth' or sort_mode == 'similarity') and lr_coef > 0:
@@ -70,7 +77,7 @@ def build_tree(
         print('\nSorting frames by similarity to parent...')
         t_list = list(t_annot.copy())
         if t_ignore is not None:
-            t_list = list(np.unique(t_list + list(t_ignore)))
+            t_list = list(np.unique(t_list + t_ignore))
         p_list = np.zeros((shape_t,))
         p_list[t_list] = -1
 
@@ -78,7 +85,7 @@ def build_tree(
         np.fill_diagonal(d_temp, 2.1)  # dist_corrcoeff ranges from 0. to 2.0
         d_temp[:, t_list] = 2.1
         if t_ignore is not None:
-            d_temp[list(t_ignore), :] = 2.1
+            d_temp[t_ignore, :] = 2.1
 
         while len(t_list) < shape_t:
             parent, child = divmod(int(np.argmin(d_temp[t_list, :])), shape_t)
@@ -124,15 +131,15 @@ def build_tree(
         p_list = np.concatenate(p_tree)[np.argsort(t_list)].astype(int)
         r_list = np.concatenate(r_tree)[np.argsort(t_list)].astype(int)
         if t_ignore is not None:
-            for t in list(t_ignore):
+            for t in t_ignore:
                 if p_list[t] > t > 0:
                     p = p_list[t-1] + 1
-                    while p in list(t_ignore):
+                    while p in t_ignore:
                         p += 1
                     p_list[t-1] = p
                 elif p_list[t] < t < shape_t - 1:
                     p = p_list[t+1] - 1
-                    while p in list(t_ignore):
+                    while p in t_ignore:
                         p -= 1
                     p_list[t+1] = p
                 p_list[t] = -1

@@ -47,7 +47,7 @@ def save_movie(
     for t in tqdm(t_list, desc='Saving to video', unit='frames'):
         data = get_data(dataset, t, g=gamma, c=channel)
         xyz_result = results[t, ...]
-        if include_all and t in np.unique(annotation['t_idx']):
+        if include_all and t in annotation['t_idx']:
             u, annot, prov = get_annotation(annotation, t, exclusive_prov, exclude_self)
             w_idx = np.where(np.isin(worldline_id, u))[0]
             if len(w_idx) > 0:

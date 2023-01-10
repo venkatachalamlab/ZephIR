@@ -98,8 +98,7 @@ def build_annotations(
     print(f'\nAnnotations loaded for frames {list(t_annot)} '
           f'with shape: {np.array(annot).shape}')
     if len(partial_annot) > 0:
-        print(f'*** Partial annotations found for {len(partial_annot)} frames: '
-              f'{list(partial_annot.keys())}')
+        print(f'*** Partial annotations found for {len(partial_annot)} frames')
 
     # push variables to container
     container.update({

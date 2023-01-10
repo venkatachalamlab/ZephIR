@@ -77,6 +77,9 @@ def run_zephir(dataset: Path, args: dict):
         ):
             with open(str(dataset / 'args.json')) as json_file:
                 args = json.load(json_file)
+        else:
+            with open(str(dataset / 'args.json'), 'w') as json_file:
+                json.dump(args, json_file, indent=4)
 
         update_checkpoint(
             dataset,

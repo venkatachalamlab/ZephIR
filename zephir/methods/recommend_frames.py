@@ -52,7 +52,7 @@ def recommend_frames(
     t_ref = [t_list[med_idx]]
     s_ref = [opt_score]
     scores = d_slice[med_idx, :]
-    pbar = tqdm(range(n_frames - 1), desc='Optimizing reference frames', unit='n_frames')
+    pbar = tqdm(range(n_frames - 1), desc='Optimizing reference frames', unit='frames')
     for i in pbar:
         d_adj = np.append(
             d_slice.copy()[:, :, None],
@@ -130,9 +130,13 @@ def recommend_frames(
         plt.ylim(0, np.max(s_ref)+0.05)
         plt.plot(np.arange(1, len(s_ref) + 1), s_ref)
         plt.show()
+        print(f'\n\nOptimized score per reference frame: {s_ref}')
 
     if save_to_metadata:
+        print(f'\nSaving recommended reference frame list to metadata...')
         update_metadata(dataset, {f't_ref_fn{len(t_list)}': [int(i) for i in t_ref]})
+
+    print(f'\n\n*** DONE!\n')
 
 
 def main():

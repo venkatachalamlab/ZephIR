@@ -3,3 +3,5 @@
 *.egg-info
 *.pyc
 .idea/*
+*.png
+zephir/zephod/index.json
