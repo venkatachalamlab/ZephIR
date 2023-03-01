@@ -1,6 +1,7 @@
 import colorsys
 import cv2
 import matplotlib.pyplot as plt
+import numpy as np
 import torch
 import torch.nn.functional as F
 
@@ -106,7 +107,10 @@ def save_as_bgr(img, scale=(2, 1, 1), c=None, annotation=None, path=None, s=2):
         b = auto_lut(composite[2], newtype=np.uint8)
         frame = np.dstack([r, g, b])
     elif len(composite) == 2:
-        frame = compare_red_green(composite[0], composite[1])
+        r = composite[0].astype(np.uint8)
+        g = composite[1].astype(np.uint8)
+        b = np.zeros_like(r)
+        frame = np.dstack([r, g, b])
     elif len(composite) == 1:
         if c == 0 or c is None:
             r = auto_lut(composite[0], newtype=np.uint8)
@@ -212,7 +216,7 @@ def apply_lut(x: np.ndarray, lo: float, hi: float, newtype=None) -> np.ndarray:
     return (maxval*y_clipped).astype(newtype)
 
 
-def auto_lut(x: np.ndarray, quantiles=(0.5,0.99), newtype=None) -> np.ndarray:
+def auto_lut(x: np.ndarray, quantiles=(0.5, 0.998), newtype=None) -> np.ndarray:
     """Linearly map the specified quantiles of x to the range of newtype."""
 
     lo = np.quantile(x, quantiles[0])

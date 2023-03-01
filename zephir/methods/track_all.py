@@ -99,7 +99,7 @@ def track_all(
             if lambda_d > 0 and zephod is not None:
                 for _t in t_patch:
                     data = get_data(dataset, _t, g=gamma, c=channel)
-                    _pred = zephod(data)
+                    _pred = torch.sigmoid(zephod(data))
                     _pred = (torch.max(_pred) - _pred) / torch.max(_pred)
                     input_tensor_d.append(torch.where(_pred < 0.5, 0., 0.5))
                 input_tensor_d = torch.stack(input_tensor_d, dim=0)
@@ -229,6 +229,7 @@ def track_all(
                 blur_target = blur3d(target_tensor, _kernel_size, _sigmas, dev=dev)
                 blur_pred = blur3d(pred, _kernel_size, _sigmas, dev=dev)
 
+                reg = 0
                 if epoch > n_epoch and lambda_d > 0 and input_tensor_d is not None:
                     # feature detection loss, L_D
                     loss = torch.mean(reg_d(
@@ -239,17 +240,16 @@ def track_all(
                     # image registration loss, L_R
                     loss = torch.mean(corr_loss(blur_pred, blur_target))
 
-                    reg = 0
-                    if torch.max(k_ij) > 0:
-                        # spatial regularization, L_N
-                        reg += torch.mean(
-                            reg_n(k_ij, zephir.rho, _rho, ind, d_ref,
-                                  subset, lambda_n_mode)
-                        )
-                    if lambda_t > 0:
-                        # temporal smoothing, L_T
-                        reg += torch.mean(reg_t(lambda_t, blur_pred, (1, 5, 5), None))
-                    loss += reg
+                if torch.max(k_ij) > 0:
+                    # spatial regularization, L_N
+                    reg += torch.mean(
+                        reg_n(k_ij, zephir.rho, _rho, ind, d_ref,
+                              subset, lambda_n_mode)
+                    )
+                if lambda_t > 0:
+                    # temporal smoothing, L_T
+                    reg += torch.mean(reg_t(lambda_t, blur_pred, (1, 5, 5), None))
+                loss += reg
 
             # backpropagation call
             loss.backward()

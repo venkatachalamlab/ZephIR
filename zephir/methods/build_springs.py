@@ -31,8 +31,8 @@ def build_springs(
     z_compensator = container.get('z_compensator')
 
     print('\nBuilding neighbor tree...')
-    d_scaler = np.array([1, 1, z_compensator])
-    weighted_shape = np.array(img_shape)[::-1] * np.array([1, 1, z_compensator])
+    d_scaler = np.array([1, 1, max(1, z_compensator)])
+    weighted_shape = np.array(img_shape)[::-1] * d_scaler
 
     covar = None
     if len(t_annot) > 1:
@@ -84,12 +84,12 @@ def build_springs(
                                      for k in range(nn_max)], axis=1)
                      - np.tile(annot[:, np.newaxis, :], (1, nn_max, 1)))
             neighbors.append(np.append(ind[:, :, np.newaxis], d_ref, axis=-1))
-            if load_nn:
-                np.savetxt(
-                    str(dataset / 'nn_idx.txt'),
-                    np.append(np.arange(shape_n)[:, None], ind, axis=-1),
-                    fmt='%d'
-                )
+
+            np.savetxt(
+                str(dataset / 'nn_idx.txt'),
+                np.append(np.arange(shape_n)[:, None], ind, axis=-1),
+                fmt='%d'
+            )
 
     else:
         neighbors = [np.append(

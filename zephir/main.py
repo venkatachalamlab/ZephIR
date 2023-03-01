@@ -14,7 +14,7 @@ Options:
     -v --version                        show version information and exit.
     --dataset=<dataset>                 path to data directory to analyze.
     --load_checkpoint=<load_checkpoint>  resume from last checkpoint. [default: False]
-    --load_args=<load_args>             load arguments from existing args.json file. [default: False]
+    --load_args=<load_args>             load arguments from existing args.json file. [default: True]
     --allow_rotation=<allow_rotation>   enable rho parameter to rotate descriptors. [default: False]
     --channel=<channel>                 data channel to register.
     --clip_grad=<clip_grad>             maximum value for gradients; use -1 to uncap gradients. [default: 1.0]
@@ -30,7 +30,7 @@ Options:
     --lambda_n=<lambda_n>               coefficient for intra-keypoint spring constant. [default: 1.0]
     --lambda_n_mode=<lambda_n_mode>     method by which spring loss is calculated. [default: disp]
     --lambda_t=<lambda_t>               coefficient for temporal loss. [default: -1.0]
-    --load_nn=<load_nn>                 load in manually defined spring connections if available. [default: True]
+    --load_nn=<load_nn>                 load in manually defined spring connections if available. [default: False]
     --lr_ceiling=<lr_ceiling>           maximum value for initial learning rate. [default: 0.2]
     --lr_coef=<lr_coef>                 coefficient for initial learning rate. [default: 2.0]
     --lr_floor=<lr_floor>               minimum value for initial learning rate. [default: 0.02]

@@ -48,12 +48,12 @@ class ZephOD(nn.Module):
             self.kernel,
             self.padding
         )
-        self.output_layer = conv(
-            self.init_nodes * 2,
-            self.n_channels_out,
-            nn.Sigmoid(),
-            self.kernel,
-            self.padding,
+        self.output_layer = nn.Sequential(
+            nn.Conv3d(self.init_nodes * 2,
+                      self.n_channels_out,
+                      self.kernel,
+                      padding=self.padding,
+                      padding_mode='zeros')
         )
 
     def preprocess(self, vol):

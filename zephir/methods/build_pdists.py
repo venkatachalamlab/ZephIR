@@ -15,6 +15,7 @@ def dist_corrcoef(image_1, image_2):
     return dist
 
 
+@lru_cache(maxsize=1024)
 def get_thumbnail(dataset, channel, t, scale):
     """Return low-resolution thumbnail of data volume."""
 
