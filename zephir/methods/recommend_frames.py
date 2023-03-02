@@ -134,7 +134,7 @@ def recommend_frames(
 
     if save_to_metadata:
         print(f'\nSaving recommended reference frame list to metadata...')
-        update_metadata(dataset, {f't_ref_fn{len(t_list)}': [int(i) for i in t_ref]})
+        update_metadata(dataset, {f't_ref': [int(i) for i in t_ref]})
 
     print(f'\n\n*** DONE!\n')
 
