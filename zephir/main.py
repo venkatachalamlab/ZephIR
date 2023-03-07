@@ -216,7 +216,7 @@ def run_zephir(dataset: Path, args: dict):
     )
 
     now = datetime.datetime.now()
-    now_ = now.strftime("%m_%d_%Y_%H_%M_%S")
+    now_ = now.strftime("%Y_%m_%d_%H_%M_%S")
     shutil.copy(dataset / 'checkpoint.pt',
                 dataset / 'backup' / f'checkpoint_{now_}.pt')
 

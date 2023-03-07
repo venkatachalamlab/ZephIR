@@ -99,7 +99,7 @@ def save_annotations(
         if not (dataset / 'backup').is_dir():
             Path.mkdir(dataset / 'backup')
         now = datetime.datetime.now()
-        now_ = now.strftime("%m_%d_%Y_%H_%M")
+        now_ = now.strftime("%Y_%m_%d_%H_%M_%S")
         shutil.copy(dataset / 'annotations.h5',
                     dataset / 'backup' / f'annotations_{now_}.h5')
         f = h5py.File(dataset / 'annotations.h5', mode='w')
