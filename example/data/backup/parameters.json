@@ -1,0 +1,20 @@
+{
+ "color": false,
+ "high_res_color": false,
+ "chan_alignment_t": null,
+ "flipx": false,
+ "flipy": true,
+ "rotation": 0,
+ "x_rng": [
+  0,
+  512
+ ],
+ "y_rng": [
+  300,
+  500
+ ],
+ "z_rng": [
+  0,
+  23
+ ]
+}

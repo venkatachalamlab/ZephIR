@@ -1,0 +1,9 @@
+0,diH2O
+31,diH2O
+151,e-2 IAA
+211,diH2O
+219,diH2O
+331,e-2 IAA
+391,diH2O
+399,diH2O
+511,diH2O

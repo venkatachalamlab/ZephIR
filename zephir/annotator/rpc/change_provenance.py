@@ -28,7 +28,7 @@ def change_provenance(dataset: Path, annotations: AnnotationTable,
         new_provenance: Any regexp for matching.
             _ACTIVE: Use the currently active provenance [default]
             'XX..' Match XX followed by any two characters.
-    ex: "*, _now, NEIR, ANTT": Updates all neurons in this frame with provenance "NEIR" to "ANTT"
+    ex: "*, _now, ZEIR, ANTT": Updates all neurons in this frame with provenance "ZEIR" to "ANTT"
     """
 
     arg_list = arg.replace(" ", "").split(",")

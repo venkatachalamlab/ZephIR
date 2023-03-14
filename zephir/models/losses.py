@@ -15,8 +15,8 @@ from ..utils.utils import *
 def corr_loss(prediction, target):
     """Image registration loss, L_R.
 
-    Normalized correlation loss between two lists of volumes (T, C, Z, Y, X).
-    Loss is calculated over (Z, Y, X) axes and averaged over (C) axis. (T) axis
+    Normalized correlation loss between two lists of volumes (T, N, C, Z, Y, X).
+    Loss is calculated over (C, Z, Y, X) axes and averaged over (N) axis. (T) axis
     is not reduced.
 
     :param prediction: child descriptors
@@ -28,6 +28,9 @@ def corr_loss(prediction, target):
     vy = target - torch.mean(target, dim=[2, 3, 4, 5], keepdim=True)
     # child descriptors can sometimes be empty and cause DivByZero error
     if torch.any(torch.std(prediction, dim=[2, 3, 4, 5]) == 0):
+        sx = torch.std(prediction, dim=[2, 3, 4, 5])
+        for t in range(sx.shape[0]):
+            sx[t][sx[t] == 0] = 1
         sxy = torch.mul(torch.std(target, dim=[2, 3, 4, 5]),
                         torch.std(target, dim=[2, 3, 4, 5]))
     else:
@@ -93,7 +96,7 @@ def reg_t(k, descriptors, crop_rads, npx_to_keep):
     in intensity from the center frame.
 
     :param k: multiplier to modulate relative contribution to loss, lambda_T
-    :param descriptors: child descriptors (T, C, Z, Y, X)
+    :param descriptors: child descriptors (T, N, C, Z, Y, X)
     :param crop_rads: radius of center crop (Z, Y, X)
     :param npx_to_keep: number of pixels to keep when calculating average intensity value
     :return: loss

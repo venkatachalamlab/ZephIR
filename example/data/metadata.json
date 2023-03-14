@@ -1,0 +1,13 @@
+{
+    "shape_t": 512,
+    "shape_c": 3,
+    "shape_z": 23,
+    "shape_y": 200,
+    "shape_x": 512,
+    "dtype": "uint8",
+    "t_ref": [
+        271,
+        437,
+        45
+    ]
+}

@@ -7,7 +7,6 @@ Usage:
     zephir -h | --help
     zephir -v | --version
     zephir --dataset=<dataset> [options]
-    zephir --dataset=<dataset> [options]
 
 Options:
     -h --help                           show this message and exit.

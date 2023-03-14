@@ -159,8 +159,9 @@ def track_all(
             subset = _rho = None
             for i, _t in enumerate(t_patch):
                 if _t in partial_annot.keys():
-                    tqdm.write(f'*** Partial annotations available for frame {_t}')
                     _pins, _params = partial_annot[_t]
+                    tqdm.write(f'*** Partial annotations available '
+                               f'for {len(_pins)} keypoints')
 
                     if motion_predict:
                         # using partial annotations to interpolate a flow field
