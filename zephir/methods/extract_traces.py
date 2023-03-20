@@ -62,9 +62,9 @@ def extract_traces(
     dist_thresh,
     wlid_ref,
     a_scalar=0.8,
-    crop_shape=(3, 9, 9),
+    crop_shape=(3, 7, 7),
     eps=0.01,
-    npx_to_keep=16,
+    npx_to_keep=9,
     save_as_npy=True,
     save_as_fig=True,
     verbose=False):
