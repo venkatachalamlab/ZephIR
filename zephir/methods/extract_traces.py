@@ -21,9 +21,9 @@ Options:
     --channel=<channel>                 data channel to pull traces from.
     --cuda=<cuda>  						check if a CUDA-compatible GPU is available for  use. [default: True]
     --cutoff=<cutoff>  					cutoff frequency for lowpass filter. [default: 1.0]
-    --debleach=<debleach>  				whether to apply a debleaching step. [default: True]
+    --debleach=<debleach>  				whether to apply a debleaching step. [default: False]
     --dist_thresh=<dist_thresh>  		threshold for pw-frame distance to exclude. [default: 2.1]
-    --n_chunks=<n_chunks>               number of steps to divide the forward pass into. [default: 10]
+    --n_chunks=<n_chunks>               number of steps to divide the forward pass into. [default: 1]
     --n_cluster=<n_cluster>     		threshold for clustering for heatmap. [default: 1]
     --nn_max=<nn_max>  					maximum number of neighbors to mask. [default: 5]
     --rma_channel=<rma_channel>  		data channel for removing multiplicative artifacts.
