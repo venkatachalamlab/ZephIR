@@ -10,7 +10,7 @@
 
 ZephIR is a multiple object tracking algorithm based on image registration and built on PyTorch. Check out our [preprint](https://www.biorxiv.org/content/10.1101/2022.07.18.500485v1) and [tutorial video](https://youtu.be/4O9aIftvoqM)!
 
-### Latest Updates in v1.0.4
+### Latest Updates in v1.0.5
 
 * bug fixes for deprecated dependencies
 * see [release notes](https://github.com/venkatachalamlab/ZephIR/releases) for full list of changes
@@ -82,11 +82,11 @@ If you run into this issue, check your `numpy` and `numpy-base` versions and if 
 
 3. Checkout the current release:
 ```bash
-git checkout v1.0.4
+git checkout v1.0.5
 ```
 Use the following command to see what's new in the most recent release:
 ```bash
-git show v1.0.4
+git show v1.0.5
 ```
 
 4. Install:
