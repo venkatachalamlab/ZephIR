@@ -29,12 +29,23 @@ def jump_to_next_t_ref(
     """
 
     arg_list = arg.replace(" ", "").split(",")
-    step = -1 if arg_list[0] == "True" else 1
+   json_filename = dataset / "metadata.json"
+    with open(json_filename) as json_file:
+        metadata = json.load(json_file)
 
-    metadata = get_metadata(dataset)
-    t_list = metadata['t_ref']
+    keys = [s for s in metadata.keys() if s.startswith('t_ref')]
+
+    if len(keys) == 0:
+        t_list = []
+    else:
+        t_list = metadata[keys[0]]
+
+    if 0 not in t_list:
+        t_list.append(0)
+    
     t_list.sort()
     t_now = window_state["t_idx"]
+    step = -1 if arg_list[0] == "True" else 1
 
     if t_now in t_list:
         t = t_list[(t_list.index(t_now) + step) % len(t_list)]
