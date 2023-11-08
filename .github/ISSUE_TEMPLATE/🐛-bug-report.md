@@ -7,6 +7,8 @@ assignees: jdryu
 
 ---
 
+## 🐛 Bug report
+
 **Describe the bug**
 A clear and concise description of what the bug is and the steps leading to the failure. Be sure to indicate which module is experiencing the error: ZephIR (tracker), annotator, ZephOD (center detector), all, or unknown.
 
