@@ -15,6 +15,9 @@ A clear and concise description of what the bug is and the steps leading to the 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
+**Current setup**
+A concise description of your setup, including your OS and environment, installed ZephIR version, Python version, and other relevant libraries. 
+
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
