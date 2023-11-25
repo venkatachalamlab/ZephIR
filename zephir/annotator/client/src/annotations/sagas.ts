@@ -140,6 +140,7 @@ function* watch_update_annotation() {
 function* watch_delete_annotation() {
   yield takeEvery(saga_action_types.delete_annotation, delete_annotation)
 }
+
 export const sagas = [
   watch_insert_annotation,
   watch_insert_annotation_here,

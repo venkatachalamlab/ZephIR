@@ -12,8 +12,15 @@ from .overwrite_zeir_checkpoint import overwrite_zeir_checkpoint
 from .jump_to_next_t_ref import jump_to_next_t_ref
 
 __all__ = [
-    "delete_annotations", "insert_local_max", "insert_annotation",
-    "randomly_color_worldlines", "renumber_worldlines", "jump_to_frame",
-    "create_track", "change_provenance", "update_frame", "overwrite_zeir_checkpoint",
-    "jump_to_next_t_ref"
+    "delete_annotations",           # 0
+    "insert_local_max",             # 1
+    "insert_annotation",            # 2
+    "randomly_color_worldlines",    # 3
+    "renumber_worldlines",          # 4
+    "jump_to_frame",                # 5
+    "create_track",                 # 6
+    "change_provenance",            # 7
+    "update_frame",                 # 8
+    "overwrite_zeir_checkpoint",    # 9
+    "jump_to_next_t_ref"            # 10
 ]

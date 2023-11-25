@@ -3,14 +3,14 @@ from setuptools import setup, find_packages
 __version__ = '1.0.5'
 
 requirements = [
-    'dataclasses>=0.6'
+    'dataclasses>=0.6',
     'docopt>=0.6.2',
     'Flask>=2.1.2',
     'gevent>=21.12.0',
     'h5py>=3.6.0',
     'matplotlib>=3.5.2',
     'numpy>=1.22.4',
-    'opencv-python>=4.5.5.64'
+    'opencv-python>=4.5.5.64',
     'pandas>=1.4.2',
     'scikit-image>=0.19.2',
     'scikit-learn>=1.0.2',

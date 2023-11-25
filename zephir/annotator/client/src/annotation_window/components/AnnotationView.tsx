@@ -73,6 +73,7 @@ const mapDispatchToProps = (dispatch: AppDispatch_t) => {
     click: (x: click_payload_t) => dispatch(saga_actions.click(x)),
     // doubleclick: (x: click_payload_t) =>
     //   dispatch(saga_actions.doubleclick(x))
+    // drag: (x: click_payload_t) => dispatch(saga_actions.drag(x))
   }
 }
 

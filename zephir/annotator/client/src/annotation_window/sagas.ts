@@ -26,6 +26,7 @@ const saga_action_types = {
   adjust_t: prefix + "adjust_t",
   click: prefix + "click",
   doubleclick: prefix + "doubleclick",
+  drag: prefix + "drag",
   save: prefix + "save",
   load: prefix + "load",
   rpc: prefix + "rpc",
@@ -63,6 +64,9 @@ export const saga_actions = {
 
   doubleclick: createAction<click_payload_t>(
     saga_action_types.doubleclick),
+
+  drag: createAction<click_payload_t>(
+      saga_action_types.drag),
 
   save: createAction(saga_action_types.save),
 
@@ -201,6 +205,11 @@ function* doubleclick(action: PayloadAction<click_payload_t>) {
   yield put(annotations_saga_actions.insert_annotation_here())
 }
 
+// function* drag(action: PayloadAction<click_payload_t>) {
+//   yield put(saga_actions.click(action.payload))
+//   yield put(annotations_saga_actions.update_annotation())
+// }
+
 function* save() {
   yield call(api.save)
 }
@@ -286,6 +295,10 @@ function* watch_doubleclick() {
   yield takeLatest(saga_action_types.doubleclick, doubleclick)
 }
 
+// function* watch_drag() {
+//   yield takeLatest(saga_action_types.drag, drag)
+// }
+
 function* watch_save() {
   yield takeLatest(saga_action_types.save, save)
 }
@@ -312,6 +325,7 @@ export const sagas = [
   watch_adjust_t,
   watch_click,
   watch_doubleclick,
+  // watch_drag,
   watch_save,
   watch_load,
   watch_rpc,

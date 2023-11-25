@@ -29,7 +29,7 @@ def jump_to_next_t_ref(
     """
 
     arg_list = arg.replace(" ", "").split(",")
-   json_filename = dataset / "metadata.json"
+    json_filename = dataset / "metadata.json"
     with open(json_filename) as json_file:
         metadata = json.load(json_file)
 

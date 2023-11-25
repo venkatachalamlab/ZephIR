@@ -21,12 +21,13 @@ from functools import lru_cache
 import io
 import os
 from pathlib import Path
+from queue import Queue
 import subprocess
 import traceback
 from typing import Tuple
 
 from docopt import docopt
-from flask import (Flask, jsonify, send_file, request, send_from_directory)
+from flask import (Flask, jsonify, send_file, request, Response, send_from_directory)
 from gevent.pywsgi import WSGIServer
 import numpy as np
 from skimage.measure import block_reduce
@@ -45,6 +46,9 @@ app.logger.setLevel("INFO")
 app.dataset = Path(r"D:\data\201124")
 
 (app.annotations, app.worldlines) = load_annotations(app.dataset)
+
+q = Queue(maxsize=5)
+q.put_nowait({'method': 'handshake'})
 
 
 def get_volume(t: int) -> np.ndarray:
@@ -388,6 +392,43 @@ def handle_rpc():
         return "error"
 
 
+@app.route("/socket", methods=["GET", "POST"])
+def handle_rpc_from_socket():
+    if request.method == "POST":
+        data = request.json
+        q.put_nowait(data)
+    payload = {"status": "OK"}
+    return jsonify(payload)
+
+
+@app.route("/listen", methods=["GET", "POST"])
+def handle_announcement():
+
+    def event_stream():
+        data = q.get()
+        print(data)
+
+        if data['method'] == 'handshake':
+            msg = 'data:[{"type":"handshake"}]\n\n'
+            yield msg
+
+        else:
+            try:
+                proc = getattr(rpc, data["method"], None)
+
+                actions = proc(app.dataset, app.annotations, app.worldlines,
+                               None, data["arg"], app.logger)
+
+                # yield jsonify({"status": "ok", "callbacks": actions})
+                msg = f'data:{actions}\n\n'.replace('\'', '\"')
+                yield msg
+
+            except Exception as e:
+                app.logger.info(f"Received invalid request on socket!")
+
+    return Response(event_stream(), mimetype="text/event-stream")
+
+
 def main():
     """CLI entry point."""
 
@@ -400,9 +441,9 @@ def main():
     port = int(args["--port"])
 
     print("Starting a server on port {}".format(port))
-
-    http_server = WSGIServer(("0.0.0.0", port), app)
-    http_server.serve_forever()
+    app.run(host=f'0.0.0.0', port=port, threaded=True)
+    # http_server = WSGIServer(("0.0.0.0", port), app)
+    # http_server.serve_forever()
 
 
 if __name__ == "__main__":
