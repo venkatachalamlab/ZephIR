@@ -8,7 +8,7 @@
 [![Youtube](https://img.shields.io/badge/YouTube-Demo-red)](https://youtu.be/4O9aIftvoqM)
 
 
-ZephIR is a multiple object tracking algorithm based on image registration and built on PyTorch. Check out our [preprint](https://www.biorxiv.org/content/10.1101/2022.07.18.500485v1) and [tutorial video](https://youtu.be/4O9aIftvoqM)!
+ZephIR is a multiple object tracking algorithm based on image registration and built on PyTorch. Check out the [publication](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1012075) and [tutorial video](https://youtu.be/4O9aIftvoqM)!
 
 ### Latest Updates in v1.0.5
 
