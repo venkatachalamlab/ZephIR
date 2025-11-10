@@ -45,22 +45,21 @@ pip install docopt flask==2.1.2 pandas==1.4.2 zephir
 
 ### Dependencies
 
-Make sure that **Python (>=3.8.1)** and the following packages are installed (prefer conda over pip):
-  - dataclasses (>=0.6)
-  - docopt (>=0.6.2)
-  - Flask (>=2.1.2)
-  - gevent (>=21.12.0)
-  - h5py (>=3.6.0)
-  - matplotlib (>=3.5.2)
-  - numpy (>=1.22.4)
-  - opencv-python (>=4.5.5.64)
-  - pandas (>=1.4.2)
-  - pathlib (>=1.0.1)
-  - scikit-learn (>=1.0.2)
+Make sure that **Python (>=3.11)** and the following packages are installed (prefer uv over pip):
+  - dataclasses (>=0.8)
+  - docopt-ng (>=0.9.0)
+  - flask (>=3.1.2)
+  - gevent (>=25.9.0)
+  - h5py (>=3.15.1)
+  - matplotlib (>=3.10.7)
+  - numpy (>=2.0)
+  - opencv-python (>=4.6.0)
+  - pandas (>=2.3.3)
   - scikit-image (>=0.19.2)
-  - scipy (>=1.7.3)
-  - setuptools (>=61.2.0)
-  - torch (>=1.10.0) (see [PyTorch.org](https://pytorch.org/get-started/locally/) for instructions on installing with CUDA)
+  - scikit-learn (>=1.7.2)
+  - scipy (>=1.16.0)
+  - setuptools (>=80.9.0)
+  - torch (>=2.9.0) (see [PyTorch.org](https://pytorch.org/get-started/locally/) for instructions on installing with CUDA)
   - tqdm (>=4.64.0)
 
 > **NOTE**: To enable GPU acceleration, you need to compile PyTorch with CUDA by following the instructions on [PyTorch.org](https://pytorch.org/get-started/locally/). 
@@ -119,7 +118,7 @@ ZephIR includes an annotator GUI with custom Python macros for interacting with 
 
 Run from command line:
 ```bash
-annotator --dataset=. [--port=5000]
+annotator --dataset=. [--port=5005]
 ```
 
 Learn more about the annotator and its features [here](https://github.com/venkatachalamlab/ZephIR/blob/main/docs/annotatorGUI.md).

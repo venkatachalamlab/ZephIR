@@ -1,0 +1,57 @@
+[tool.uv]
+package = true
+
+[tool.setuptools]
+py-modules = ['zephir']
+
+[project]
+name = 'zephir'
+version = '1.0.5'
+description = 'Multiple object tracking algorithm via image registration'
+authors = [
+    {name = 'James Ryu', email = 'jd.ryu@icloud.com'},
+    {name = 'Vivek Venkatachalam', email = 'v.venkatachalam@northeastern.edu'}
+]
+maintainers = [
+    {name = 'James Ryu', email = 'jd.ryu@icloud.com'},
+]
+license = 'MIT'
+readme = 'README.md'
+requires-python = '>= 3.11'
+dependencies = [
+    'dataclasses>=0.8',
+    'docopt-ng>=0.9.0',
+    'flask>=3.1.2',
+    'gevent>=25.9.0',
+    'h5py>=3.15.1',
+    'matplotlib>=3.10.7',
+    'numpy>=2.0',
+    'opencv-python>=4.5.5.64',
+    'pandas>=2.3.3',
+    'scikit-image>=0.19.2',
+    'scikit-learn>=1.7.2',
+    'scipy>=1.16.0',
+    'setuptools>=80.9.0',
+    'torch>=2.9.0',
+    'tqdm>=4.64.0',
+]
+classifiers=[
+    'Programming Language :: Python :: 3',
+    'Operating System :: OS Independent',
+    'Intended Audience :: Science/Research',
+    'Topic :: Scientific/Engineering',
+]
+
+[project.urls]
+url = 'https://github.com/venkatachalamlab/ZephIR'
+
+
+[project.scripts]
+zephir = 'zephir.main:main'
+annotator = 'zephir.annotator.main:main'
+auto_annotate = 'zephir.methods.auto_annotate:main'
+extract_traces = 'zephir.methods.extract_traces:main'
+overwrite_checkpoint = 'zephir.methods.overwrite_checkpoint:main'
+recommend_frames = 'zephir.methods.recommend_frames:main'
+train_zephod = 'zephir.zephod.train:main'
+zephod = 'zephir.zephod.main:main'
