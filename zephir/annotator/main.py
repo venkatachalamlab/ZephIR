@@ -14,7 +14,7 @@ Options:
     -h --help                   Show this help.
     -v --version                Show version information.
     --dataset=PATH              Location of data for labeling.
-    --port=PORT                 Port to serve on. [default: 5000]
+    --port=PORT                 Port to serve on. [default: 5005]
 """
 
 from functools import lru_cache

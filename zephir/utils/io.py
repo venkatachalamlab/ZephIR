@@ -165,7 +165,11 @@ def load_checkpoint(path, fallback=True, verbose=True):
         while checkpoint is None:
 
             try:
-                checkpoint = torch.load(str(file_name), map_location=map_loc)
+                checkpoint = torch.load(
+                    str(file_name),
+                    map_location=map_loc,
+                    weights_only=False
+                )
 
             except ModuleNotFoundError:
                 print('*** ERROR: checkpoint not compatible with current ZephIR version!')

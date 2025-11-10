@@ -53,7 +53,7 @@ class Annotation:
         self.z = np.float32(self.z)
         self.worldline_id = np.uint32(self.worldline_id)
         self.parent_id = np.uint32(self.parent_id)
-        self.provenance = np.string_(self.provenance)
+        self.provenance = np.bytes_(self.provenance)
 
         # if self.id == b"":
         #     self.id = get_random_base64_id()
@@ -69,7 +69,7 @@ class Annotation:
 
         jsonable_dict = {}
         for k, v in self.to_dict().items():
-            if type(v) is bytes or type(v) is np.string_:
+            if type(v) is bytes or type(v) is np.bytes_:
                 v = v.decode()
             if type(v) is np.uint32:
                 v = int(v)
@@ -128,13 +128,13 @@ class AnnotationTable(DataclassTableBase):
 @dataclass
 class Worldline:
     id: np.uint32 = 0
-    name: np.string_ = b"null"
+    name: np.bytes_ = b"null"
     color: _S7 = b"#ffffff"
 
     def __post_init__(self):
 
-        self.name = np.string_(self.name)
-        self.color = np.string_(self.color)
+        self.name = np.bytes_(self.name)
+        self.color = np.bytes_(self.color)
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -143,7 +143,7 @@ class Worldline:
 
         jsonable_dict = {}
         for k, v in self.to_dict().items():
-            if type(v) is bytes or type(v) is np.string_:
+            if type(v) is bytes or type(v) is np.bytes_:
                 v = v.decode()
             if type(v) is np.uint32:
                 v = int(v)
@@ -173,7 +173,7 @@ class WorldlineTable(DataclassTableBase):
 
         worldline_ids = np.unique(annotations.df["worldline_id"])
         for id in worldline_ids:
-            worldlines.insert(Worldline(name=str(id)))
+            worldlines.insert(Worldline(name=bytes_(id)))
 
         return worldlines
 

@@ -135,7 +135,7 @@ class DataclassTableBase:
 
         for c in self.df.columns:
 
-            if self.column_types[c] == np.string_:
+            if self.column_types[c] == np.bytes_:
                 dtype = "S8"
             else:
                 dtype = self.column_types[c]
