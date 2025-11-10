@@ -6,7 +6,7 @@ py-modules = ['zephir']
 
 [project]
 name = 'zephir'
-version = '1.0.5'
+version = '1.0.6'
 description = 'Multiple object tracking algorithm via image registration'
 authors = [
     {name = 'James Ryu', email = 'jd.ryu@icloud.com'},

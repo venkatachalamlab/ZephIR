@@ -10,7 +10,7 @@
 
 ZephIR is a multiple object tracking algorithm based on image registration and built on PyTorch. Check out the [publication](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1012075) and [tutorial video](https://youtu.be/4O9aIftvoqM)!
 
-### Latest Updates in v1.0.5
+### Latest Updates in v1.0.6
 
 * bug fixes for deprecated dependencies
 * see [release notes](https://github.com/venkatachalamlab/ZephIR/releases) for full list of changes
@@ -40,7 +40,7 @@ We provide some support for exporting ZephIR results to [DeepLabCut](https://git
 ### Quick start
 
 ```bash
-pip install docopt flask==2.1.2 pandas==1.4.2 zephir
+pip install zephir
 ```
 
 ### Dependencies
@@ -81,20 +81,20 @@ If you run into this issue, check your `numpy` and `numpy-base` versions and if 
 
 3. Checkout the current release:
 ```bash
-git checkout v1.0.5
+git checkout v1.0.6
 ```
 Use the following command to see what's new in the most recent release:
 ```bash
-git show v1.0.5
+git show v1.0.6
 ```
 
 4. Install:
   ```bash
-  python setup.py install
+  python3 -m pip install .
   ```
   or install in development mode:
   ```bash
-  python setup.py develop
+  python3 -m pip install -e .
   ```
 
 ## Getting Started
